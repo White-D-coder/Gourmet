@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  CORPORATE_BUYER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  PACKED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+  FAILED
+}
+
+enum InquiryStatus {
+  NEW
+  REVIEWING
+  CONTACTED
+  PROPOSAL_SENT
+  NEGOTIATION
+  WON
+  LOST
+  FULFILLED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String?
+  role         Role     @default(CUSTOMER)
+  firstName    String?
+  lastName     String?
+  phone        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders    Order[]
+  inquiries Inquiry[]
+  cart      Cart?
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Collection {
+  id          String    @id @default(uuid())
+  name        String
+  slug        String    @unique
+  description String?
+  theme       String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id               String   @id @default(uuid())
+  name             String
+  slug             String   @unique
+  sku              String   @unique
+  basePrice        Decimal  @db.Decimal(10, 2)
+  discountPrice    Decimal? @db.Decimal(10, 2)
+  shortDescription String?
+  longDescription  String?
+  isFeatured       Boolean  @default(false)
+  isCorporate      Boolean  @default(false)
+  availability     Boolean  @default(true)
+
+  categoryId   String?
+  category     Category?   @relation(fields: [categoryId], references: [id])
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+
+  variants         ProductVariant[]
+  customizations   CustomizationSchema[]
+  inventoryRecords InventoryRecord[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductVariant {
+  id          String  @id @default(uuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku         String  @unique
+  name        String
+  priceAdjust Decimal @default(0) @db.Decimal(10, 2)
+  inventory   Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomizationSchema {
+  id         String                @id @default(uuid())
+  productId  String
+  product    Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String
+  type       String // e.g., TEXT_ENGRAVING, PACKAGING_CHOICE, ADDON
+  isRequired Boolean               @default(false)
+  options    CustomizationOption[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomizationOption {
+  id          String              @id @default(uuid())
+  schemaId    String
+  schema      CustomizationSchema @relation(fields: [schemaId], references: [id], onDelete: Cascade)
+  label       String
+  priceAdjust Decimal             @default(0) @db.Decimal(10, 2)
+  isCorporate Boolean             @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InventoryRecord {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  type      String // e.g., ADD, DEDUCT, RESERVE
+  notes     String?
+
+  createdAt DateTime @default(now())
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String?    @unique
+  user      User?      @relation(fields: [userId], references: [id])
+  sessionId String?    @unique // For guest carts
+  items     CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id                 String  @id @default(uuid())
+  cartId             String
+  cart               Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId          String
+  quantity           Int
+  customizationState Json? // Storing user choices
+  priceSnapshot      Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  status          OrderStatus @default(PENDING)
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  taxAmount       Decimal     @db.Decimal(10, 2)
+  deliveryFee     Decimal     @db.Decimal(10, 2)
+  deliveryDetails Json
+  customerDetails Json
+  items           OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id                 String  @id @default(uuid())
+  orderId            String
+  order              Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId          String
+  quantity           Int
+  priceSnapshot      Decimal @db.Decimal(10, 2)
+  customizationState Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inquiry {
+  id            String        @id @default(uuid())
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id])
+  companyName   String
+  contactName   String
+  email         String
+  phone         String?
+  budget        String?
+  quantityRange String?
+  occasion      String?
+  requirements  String?
+  status        InquiryStatus @default(NEW)
+  adminNotes    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
