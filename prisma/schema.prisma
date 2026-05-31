@@ -3,7 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -37,7 +38,7 @@ enum InquiryStatus {
 }
 
 model User {
-  id           String   @id @default(uuid())
+  id           String   @id @default(uuid()) @map("_id")
   email        String   @unique
   passwordHash String?
   role         Role     @default(CUSTOMER)
@@ -53,7 +54,7 @@ model User {
 }
 
 model Category {
-  id          String    @id @default(uuid())
+  id          String    @id @default(uuid()) @map("_id")
   name        String
   slug        String    @unique
   description String?
@@ -63,7 +64,7 @@ model Category {
 }
 
 model Collection {
-  id          String    @id @default(uuid())
+  id          String    @id @default(uuid()) @map("_id")
   name        String
   slug        String    @unique
   description String?
@@ -74,12 +75,12 @@ model Collection {
 }
 
 model Product {
-  id               String   @id @default(uuid())
+  id               String   @id @default(uuid()) @map("_id")
   name             String
   slug             String   @unique
   sku              String   @unique
-  basePrice        Decimal  @db.Decimal(10, 2)
-  discountPrice    Decimal? @db.Decimal(10, 2)
+  basePrice        Float
+  discountPrice    Float?
   shortDescription String?
   longDescription  String?
   isFeatured       Boolean  @default(false)
@@ -100,12 +101,12 @@ model Product {
 }
 
 model ProductVariant {
-  id          String  @id @default(uuid())
+  id          String  @id @default(uuid()) @map("_id")
   productId   String
   product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   sku         String  @unique
   name        String
-  priceAdjust Decimal @default(0) @db.Decimal(10, 2)
+  priceAdjust Float @default(0)
   inventory   Int     @default(0)
 
   createdAt DateTime @default(now())
@@ -113,7 +114,7 @@ model ProductVariant {
 }
 
 model CustomizationSchema {
-  id         String                @id @default(uuid())
+  id         String                @id @default(uuid()) @map("_id")
   productId  String
   product    Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
   name       String
@@ -126,11 +127,11 @@ model CustomizationSchema {
 }
 
 model CustomizationOption {
-  id          String              @id @default(uuid())
+  id          String              @id @default(uuid()) @map("_id")
   schemaId    String
   schema      CustomizationSchema @relation(fields: [schemaId], references: [id], onDelete: Cascade)
   label       String
-  priceAdjust Decimal             @default(0) @db.Decimal(10, 2)
+  priceAdjust Float             @default(0)
   isCorporate Boolean             @default(false)
 
   createdAt DateTime @default(now())
@@ -138,7 +139,7 @@ model CustomizationOption {
 }
 
 model InventoryRecord {
-  id        String  @id @default(uuid())
+  id        String  @id @default(uuid()) @map("_id")
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
@@ -149,7 +150,7 @@ model InventoryRecord {
 }
 
 model Cart {
-  id        String     @id @default(uuid())
+  id        String     @id @default(uuid()) @map("_id")
   userId    String?    @unique
   user      User?      @relation(fields: [userId], references: [id])
   sessionId String?    @unique // For guest carts
@@ -160,26 +161,26 @@ model Cart {
 }
 
 model CartItem {
-  id                 String  @id @default(uuid())
+  id                 String  @id @default(uuid()) @map("_id")
   cartId             String
   cart               Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId          String
   quantity           Int
   customizationState Json? // Storing user choices
-  priceSnapshot      Decimal @db.Decimal(10, 2)
+  priceSnapshot      Float
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Order {
-  id              String      @id @default(uuid())
+  id              String      @id @default(uuid()) @map("_id")
   userId          String?
   user            User?       @relation(fields: [userId], references: [id])
   status          OrderStatus @default(PENDING)
-  totalAmount     Decimal     @db.Decimal(10, 2)
-  taxAmount       Decimal     @db.Decimal(10, 2)
-  deliveryFee     Decimal     @db.Decimal(10, 2)
+  totalAmount     Float
+  taxAmount       Float
+  deliveryFee     Float
   deliveryDetails Json
   customerDetails Json
   items           OrderItem[]
@@ -189,12 +190,12 @@ model Order {
 }
 
 model OrderItem {
-  id                 String  @id @default(uuid())
+  id                 String  @id @default(uuid()) @map("_id")
   orderId            String
   order              Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId          String
   quantity           Int
-  priceSnapshot      Decimal @db.Decimal(10, 2)
+  priceSnapshot      Float
   customizationState Json?
 
   createdAt DateTime @default(now())
@@ -202,7 +203,7 @@ model OrderItem {
 }
 
 model Inquiry {
-  id            String        @id @default(uuid())
+  id            String        @id @default(uuid()) @map("_id")
   userId        String?
   user          User?         @relation(fields: [userId], references: [id])
   companyName   String
