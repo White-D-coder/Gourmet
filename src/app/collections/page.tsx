@@ -2,53 +2,181 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ChevronRight, Gift, Minus, Plus, ShoppingBag, RefreshCw } from "lucide-react";
+import { Sparkles, ChevronRight, Gift, Minus, Plus, ShoppingBag, RefreshCw, X, HelpCircle, Eye, Search } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import PremiumCanister from "@/components/PremiumCanister";
 
-// Mock Database of Items
+// Curation Helper Inventory - matches seeded database items for context coherence
 const INVENTORY = [
-  { id: "1", name: "Artisanal Roasted Makhana", type: "Gourmet", icon: "🥜", price: 25 },
-  { id: "2", name: "Premium Dryfruits Mix", type: "Gourmet", icon: "🌰", price: 45 },
-  { id: "3", name: "Royal Assam Tea Blend", type: "Beverage", icon: "🫖", price: 35 },
-  { id: "4", name: "Coorg Arabica Coffee", type: "Beverage", icon: "☕", price: 40 },
-  { id: "5", name: "Blush Leather Diary", type: "Keepsake", icon: "📓", price: 65 },
-  { id: "6", name: "Gold-Plated Signature Pen", type: "Keepsake", icon: "🖋️", price: 85 },
-  { id: "7", name: "Rose Quartz Crystal Tree", type: "Decor", icon: "🌸", price: 95 },
-  { id: "8", name: "Handcrafted Dreamcatcher", type: "Decor", icon: "🕸️", price: 55 },
+  { id: "1", name: "Premium Dark Chocolate Truffles", type: "Gourmet", price: 25 },
+  { id: "2", name: "Single Origin Coffee Beans", type: "Beverage", price: 18 },
+  { id: "3", name: "Silver Plated Tea Infuser", type: "Keepsake", price: 30 },
+  { id: "4", name: "Hand-poured Soy Candle", type: "Decor", price: 22 },
+  { id: "5", name: "Artisanal Roasted Makhana", type: "Gourmet", price: 25 },
+  { id: "6", name: "Premium Dryfruits Mix", type: "Gourmet", price: 45 },
+  { id: "7", name: "Blush Leather Diary", type: "Keepsake", price: 65 },
+  { id: "8", name: "Rose Quartz Crystal Tree", type: "Decor", price: 95 },
 ];
 
+// Map of standard hampers to their internal premium canister products
+const HAMPER_ITEMS_MAP: Record<string, {
+  theme: "rich-mahogany" | "ivory-blush" | "royal-navy" | "dark-emerald";
+  items: Array<{ id: string; name: string; type: string; price: number; desc?: string; image?: string }>;
+}> = {
+  "the-botanical-heritage": {
+    theme: "rich-mahogany",
+    items: [
+      { id: 'h1-1', name: 'Artisanal Roasted Makhana', type: 'Gourmet', price: 25, desc: 'Hand-roasted lotus seeds tossed in gourmet herbs and clarified butter.', image: '/roasted_makhana.png' },
+      { id: 'h1-2', name: 'Earl Grey Royal Tea Blend', type: 'Beverage', price: 35, desc: 'A robust black tea base infused with pure cold-pressed oil of Bergamot.', image: '/earl_grey_tea.png' },
+      { id: 'h1-3', name: 'Rose Quartz Crystal Tree', type: 'Decor', price: 95, desc: 'An elegant rose quartz crystal tree adorned with delicate brass wire and real 24k gold leaf accents.', image: '/crystal_tree.png' }
+    ]
+  },
+  "the-ivory-keepsake": {
+    theme: "ivory-blush",
+    items: [
+      { id: 'h2-1', name: 'Silver Plated Tea Infuser', type: 'Keepsake', price: 30, desc: 'Intricately designed sterling silver-plated tea strainer.', image: '/silver_tea_infuser.png' },
+      { id: 'h2-2', name: 'Fine Bone China Cup', type: 'Keepsake', price: 55, desc: 'Elegant fine bone china tea cup with gold leaf handles and trim.', image: '/china_cup.png' },
+      { id: 'h2-3', name: 'Organic Honey Lavender Jars', type: 'Gourmet', price: 20, desc: 'Small glass jar of organic honey infused with lavender buds.', image: '/honey_lavender.png' },
+      { id: 'h2-4', name: 'Premium Dark Chocolate Truffles', type: 'Gourmet', price: 25, desc: 'Velvety Ganache infused with French sea salt, covered in 70% dark chocolate.', image: '/dark_chocolate_truffles.png' }
+    ]
+  },
+  "the-imperial-executive": {
+    theme: "royal-navy",
+    items: [
+      { id: 'h3-1', name: 'Single Origin Coffee Beans', type: 'Beverage', price: 18, desc: 'Ethiopian Yirgacheffe medium roast with floral notes and bergamot acidity.', image: '/single_origin_coffee.png' },
+      { id: 'h3-2', name: 'Premium Dark Chocolate Truffles', type: 'Gourmet', price: 25, desc: 'Velvety Ganache infused with French sea salt, covered in 70% dark chocolate.', image: '/dark_chocolate_truffles.png' },
+      { id: 'h3-3', name: 'Blush Leather Diary', type: 'Keepsake', price: 65, desc: 'Hand-stitched top-grain Italian leather journal with custom hot-gold lettering.', image: '/leather_diary.png' },
+      { id: 'h3-4', name: 'Gold Foil Playing Cards', type: 'Keepsake', price: 40, desc: 'Premium deck of playing cards with intricate gold foil back designs.', image: '/gold_playing_cards.png' }
+    ]
+  }
+};
+
+const getCanisterDetails = (product: any) => {
+  if (HAMPER_ITEMS_MAP[product.slug]) {
+    return HAMPER_ITEMS_MAP[product.slug];
+  }
+  // Default unbox presentation if not custom mapped
+  return {
+    theme: "dark-emerald" as const,
+    items: [
+      {
+        id: product.id,
+        name: product.name,
+        type: product.category?.name || "Premium",
+        price: Number(product.basePrice),
+        desc: product.shortDescription || product.longDescription || "An exquisite selection of GormetCo luxury artifacts."
+      }
+    ]
+  };
+};
+
+const getProductImage = (slug: string) => {
+  switch (slug) {
+    case "the-botanical-heritage":
+      return "/botanical_hamper.png";
+    case "the-ivory-keepsake":
+      return "/ivory_hamper.png";
+    case "the-imperial-executive":
+      return "/executive_hamper.png";
+    case "premium-dark-chocolate-truffles":
+      return "/dark_chocolate_truffles.png";
+    case "single-origin-coffee-beans":
+      return "/single_origin_coffee.png";
+    case "silver-plated-tea-infuser":
+      return "/silver_tea_infuser.png";
+    case "hand-poured-soy-candle":
+      return "/hand_poured_candle.png";
+    case "artisanal-roasted-makhana":
+      return "/roasted_makhana.png";
+    case "premium-dryfruits-mix":
+      return "/dryfruits_mix.png";
+    case "blush-leather-diary":
+      return "/leather_diary.png";
+    case "rose-quartz-crystal-tree":
+      return "/crystal_tree.png";
+    case "earl-grey-royal-tea-blend":
+      return "/earl_grey_tea.png";
+    case "organic-honey-lavender-jars":
+      return "/honey_lavender.png";
+    case "gold-foil-playing-cards":
+      return "/gold_playing_cards.png";
+    case "sandalwood-incense-cones":
+      return "/incense_cones.png";
+    case "fine-bone-china-cup":
+      return "/china_cup.png";
+    case "belgian-waffle-crisps":
+      return "/waffle_crisps.png";
+    default:
+      return "/product_1.png";
+  }
+};
+
+const getFrameClass = (index: number) => {
+  const classes = ["frame-odd-1", "frame-odd-2", "frame-odd-3", "frame-odd-4"];
+  return classes[index % classes.length];
+};
+
 export default function Collections() {
-  const [step, setStep] = useState(1);
+  const router = useRouter();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [tabFilter, setTabFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("default");
   
-  // AI Questionnaire State
+  // Interactive unboxing state
+  const [selectedHamper, setSelectedHamper] = useState<{
+    product: any;
+    theme: "rich-mahogany" | "ivory-blush" | "royal-navy" | "dark-emerald";
+    items: any[];
+  } | null>(null);
+
+  // AI Curation Helper State
+  const [isConciergeOpen, setIsConciergeOpen] = useState(false);
+  const [step, setStep] = useState(1);
   const [recipient, setRecipient] = useState("");
   const [occasion, setOccasion] = useState("");
-  
-  // Box Configuration State
   const [boxSize, setBoxSize] = useState<3 | 5 | 7 | null>(null);
-  
-  // AI Curation State
   const [isCurating, setIsCurating] = useState(false);
   const [curatedItems, setCuratedItems] = useState<typeof INVENTORY>([]);
-  
   const [quantity, setQuantity] = useState(1);
 
-  // Simulated AI Logic: Picks items based on occasion/recipient
+  const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
+  const [addedProductId, setAddedProductId] = useState<string | null>(null);
+
+  // Load products from database API
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        if (data.success) {
+          // Remove Bespoke Gift Box from main display catalog since it has its own bespoke constructor page
+          const catalogProducts = data.products.filter((p: any) => p.slug !== "bespoke-gift-box");
+          setProducts(catalogProducts);
+        }
+      } catch (err) {
+        console.error("Failed to load products", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
+
+  // Simulated AI curation logic
   const generateCuration = (size: number) => {
     setIsCurating(true);
-    
-    // Simulate API delay
     setTimeout(() => {
       let shuffled = [...INVENTORY].sort(() => 0.5 - Math.random());
-      
-      // Basic mock logic: if Corporate, prioritize pens/coffee
       if (recipient === "Corporate Partner") {
-         shuffled = [...INVENTORY].sort((a, b) => (a.type === "Keepsake" ? -1 : 1));
+        shuffled = [...INVENTORY].sort((a, b) => (a.type === "Keepsake" ? -1 : 1));
       }
-      // If Wedding/Anniversary, prioritize Decor/Gourmet
       if (occasion === "Wedding" || occasion === "Anniversary") {
-         shuffled = [...INVENTORY].sort((a, b) => (a.type === "Decor" ? -1 : 1));
+        shuffled = [...INVENTORY].sort((a, b) => (a.type === "Decor" ? -1 : 1));
       }
-
       setCuratedItems(shuffled.slice(0, size));
       setIsCurating(false);
       setStep(3);
@@ -60,258 +188,678 @@ export default function Collections() {
     generateCuration(size);
   };
 
-  return (
-    <main className="min-h-screen bg-ivory text-brown-dark pt-32 pb-48 px-6 md:px-12 selection:bg-gold selection:text-white">
+  // Add standard product/hamper to cart
+  const handleAddToCart = async (product: any, shouldRedirect = false) => {
+    setAddingToCartId(product.id);
+    try {
+      const variantId = product.variants?.[0]?.id;
+      const customizationState = {
+        'Edition': 'Standard Curated Edition',
+        variantId,
+      };
+
+      const res = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+          customizationState,
+          priceSnapshot: Number(product.basePrice),
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        if (shouldRedirect) {
+          router.push('/cart');
+        } else {
+          setAddedProductId(product.id);
+          window.dispatchEvent(new Event('cart-updated'));
+          setTimeout(() => {
+            setAddedProductId(null);
+          }, 1500);
+        }
+      } else {
+        alert("Failed to add hamper to bag. Please check inventory stock levels.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error adding item to bag.");
+    } finally {
+      setAddingToCartId(null);
+    }
+  };
+
+  const handleCanisterCheckout = async (product: any) => {
+    await handleAddToCart(product, true);
+  };
+
+  // Add custom AI curated hamper configuration to cart using the seeded bespoke box template
+  const handleAddAICurationToCart = async () => {
+    setAddingToCartId("ai-curation");
+    try {
+      // Load raw bespoke template product
+      const resProducts = await fetch("/api/products");
+      const dataProducts = await resProducts.json();
+      const bespokeProduct = dataProducts.products?.find((p: any) => p.slug === "bespoke-gift-box");
+
+      if (!bespokeProduct) {
+        alert("Bespoke Curation Base template not found in database. Please run migrations.");
+        return;
+      }
       
+      const variantId = bespokeProduct.variants?.[0]?.id;
+      const unitPrice = 150 + curatedItems.length * 40;
+      
+      const selectedItemIds = curatedItems.map(curItem => {
+        const matchingProduct = dataProducts.products?.find((p: any) => p.name === curItem.name);
+        return matchingProduct?.id;
+      }).filter(Boolean);
+
+      const customizationState = {
+        'Curation Mode': 'Bespoke AI Concierge',
+        'Recipient Profile': recipient,
+        'Celebrated Occasion': occasion,
+        'Volume Limit': `${boxSize} Items`,
+        'Curated Selection': curatedItems.map(item => item.name).join(', '),
+        totalBoxes: 1,
+        selectedItemIds,
+        variantId,
+      };
+
+      const res = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: bespokeProduct.id,
+          quantity,
+          customizationState,
+          priceSnapshot: unitPrice,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setIsConciergeOpen(false);
+        router.push('/cart');
+      } else {
+        alert("Failed to save AI curation configuration.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error adding custom curation to cart.");
+    } finally {
+      setAddingToCartId(null);
+    }
+  };
+
+  const handleUnseal = (product: any) => {
+    const canister = getCanisterDetails(product);
+    setSelectedHamper({
+      product,
+      theme: canister.theme,
+      items: canister.items
+    });
+  };
+
+  // Filter logic based on tabs, search query, and sorting criteria
+  const filteredProducts = products
+    .filter((product) => {
+      // 1. Tab filter
+      let matchesTab = true;
+      if (tabFilter === "hampers") matchesTab = product.category?.slug === "hampers";
+      else if (tabFilter === "corporate") matchesTab = product.isCorporate === true;
+      else if (tabFilter === "artifacts") matchesTab = product.category?.slug !== "hampers";
+
+      // 2. Search query filter
+      let matchesSearch = true;
+      if (searchQuery.trim() !== "") {
+        const query = searchQuery.toLowerCase();
+        matchesSearch =
+          product.name.toLowerCase().includes(query) ||
+          (product.shortDescription && product.shortDescription.toLowerCase().includes(query)) ||
+          (product.category?.name && product.category.name.toLowerCase().includes(query));
+      }
+
+      return matchesTab && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (sortBy === "price-asc") {
+        return Number(a.basePrice) - Number(b.basePrice);
+      }
+      if (sortBy === "price-desc") {
+        return Number(b.basePrice) - Number(a.basePrice);
+      }
+      if (sortBy === "name-asc") {
+        return a.name.localeCompare(b.name);
+      }
+      return 0; // default
+    });
+
+  return (
+    <main className="min-h-screen bg-sand text-foreground pt-32 pb-48 px-6 md:px-12 selection:bg-gold selection:text-white relative overflow-hidden">
+      
+      {/* Background flares */}
+      <div className="absolute top-[10%] left-[-10%] w-[500px] h-[500px] rounded-full radial-gold-flare opacity-10 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[600px] h-[600px] rounded-full radial-gold-flare opacity-10 blur-3xl pointer-events-none" />
+
       {/* Header */}
-      <div className="max-w-4xl mx-auto text-center mb-16">
-        <h1 className="font-serif text-5xl md:text-6xl text-brown-dark mb-6">Bespoke AI Curation</h1>
-        <p className="font-sans text-xs uppercase tracking-[0.25em] text-brown-light leading-loose">
-          Allow our intelligent concierge to craft the perfect masterpiece based on your needs.
+      <div className="max-w-4xl mx-auto text-center mb-16 relative">
+        <span className="font-sans text-[10px] tracking-[0.3em] text-gold uppercase font-bold block mb-3 animate-pulse">* curated collections *</span>
+        <h1 className="font-serif text-5xl md:text-6xl text-clay-dark mb-6">The Masterpiece Gallery</h1>
+        <p className="font-sans text-xs uppercase tracking-[0.25em] text-clay-light max-w-xl mx-auto leading-loose">
+          Commissioned hampers and premium artifacts for life's rarest occasions. Each selection unfolds natural integrity and artisanal majesty.
         </p>
+
+        {/* AI helper invitation banner */}
+        <div className="mt-8 inline-flex items-center justify-center gap-6 bg-ivory/80 backdrop-blur-md border border-gold-light/40 py-3.5 px-8 rounded-full shadow-premium max-w-lg mx-auto">
+          <Sparkles className="w-4 h-4 text-gold shrink-0 animate-bounce" />
+          <span className="text-[10px] tracking-wider uppercase text-clay-dark font-medium font-sans">
+            Need help choosing? Let our AI Concierge assist you.
+          </span>
+          <button
+            onClick={() => {
+              setStep(1);
+              setIsConciergeOpen(true);
+            }}
+            className="text-[9px] uppercase tracking-widest font-bold text-gold border-b border-gold hover:text-clay-dark hover:border-clay-dark transition-all ml-2"
+          >
+            Start Assistant
+          </button>
+        </div>
       </div>
 
-      <div className="max-w-5xl mx-auto bg-background shadow-2xl border border-gold-light/40 relative overflow-hidden min-h-[500px]">
-        {/* Progress Bar */}
-        <div className="flex border-b border-gold-light/20 text-[10px] uppercase tracking-[0.2em] font-semibold">
-          {[1, 2, 3, 4].map((s) => (
-            <div 
-              key={s} 
-              className={`flex-1 py-4 text-center transition-colors duration-500 ${step >= s ? 'bg-gold/10 text-brown-dark' : 'text-brown-light/50'}`}
-            >
-              Step {s}
-            </div>
-          ))}
-        </div>
+      {/* Tab filter row */}
+      <div className="flex justify-center flex-wrap gap-4 mb-16 px-6 relative z-10">
+        {["all", "hampers", "corporate", "artifacts"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setTabFilter(tab)}
+            className={`px-8 py-3.5 text-[9px] uppercase tracking-[0.25em] font-bold transition-all border rounded-none cursor-pointer ${
+              tabFilter === tab
+                ? "bg-[#2e2520] text-ivory border-[#2e2520] shadow-premium"
+                : "border-gold/30 text-clay-light bg-ivory/30 hover:border-gold/80 hover:bg-ivory/70"
+            }`}
+          >
+            {tab === "all" ? "All Masterpieces" : tab === "hampers" ? "Curated Hampers" : tab === "corporate" ? "Corporate Prestige" : "Individual Artifacts"}
+          </button>
+        ))}
+      </div>
 
-        <div className="p-8 md:p-16 relative">
-          
-          {/* Full Screen Loading Overlay for AI Curation */}
-          <AnimatePresence>
-            {isCurating && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-background/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center"
+      {/* Search & Sort Panel */}
+      <div className="max-w-7xl mx-auto px-6 mb-12 relative z-10">
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-b border-gold-light/30 pb-6 pt-2">
+          {/* Search bar */}
+          <div className="relative w-full md:max-w-md group">
+            <span className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-gold/80 transition-transform duration-300 group-focus-within:scale-110" />
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search masterpieces (e.g. coffee, truffles)..."
+              className="w-full pl-8 pr-8 py-2 text-[10px] uppercase tracking-[0.2em] bg-transparent border-b border-gold-light/40 focus:border-gold focus:outline-none transition-all duration-300 font-sans text-clay-dark placeholder-gold-light/50"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute inset-y-0 right-0 pr-1.5 flex items-center text-clay-light hover:text-clay-dark"
               >
-                <motion.div 
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                >
-                  <Sparkles className="w-12 h-12 text-gold mb-6" />
-                </motion.div>
-                <h3 className="font-serif text-2xl text-brown-dark">Curating Your Masterpiece...</h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-brown-light mt-4">Analyzing recipient profile & occasion</p>
-              </motion.div>
+                <X className="w-3.5 h-3.5" />
+              </button>
             )}
-          </AnimatePresence>
+          </div>
 
-          <AnimatePresence mode="wait">
+          {/* Curation indicator & Sort controls */}
+          <div className="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
+            <span className="font-sans text-[8px] uppercase tracking-[0.25em] text-gold font-bold">
+              {filteredProducts.length} masterpieces curated
+            </span>
             
-            {/* STEP 1: AI Concierge Questionnaire */}
-            {step === 1 && (
-              <motion.div 
-                key="step1"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="flex flex-col items-center text-center"
+            <div className="flex items-center gap-2">
+              <label className="font-sans text-[8px] uppercase tracking-[0.25em] text-gold font-bold">Sort By</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-transparent border-b border-gold-light/40 focus:border-gold text-[9px] uppercase tracking-[0.2em] font-bold px-1.5 py-1.5 focus:outline-none transition-all duration-300 cursor-pointer font-sans text-clay-dark"
               >
-                <Sparkles className="w-8 h-8 text-gold mb-6" />
-                <h2 className="font-serif text-3xl mb-8">The Concierge Inquiry</h2>
-                <p className="text-brown-light text-sm mb-12 max-w-lg leading-relaxed">
-                  Tell us who you are gifting, and our AI will automatically select the perfect luxury items to leave a lasting impression.
-                </p>
+                <option value="default" className="bg-ivory text-clay-dark">Default Order</option>
+                <option value="price-asc" className="bg-ivory text-clay-dark">Price: Low to High</option>
+                <option value="price-desc" className="bg-ivory text-clay-dark">Price: High to Low</option>
+                <option value="name-asc" className="bg-ivory text-clay-dark">Name: A to Z</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                <div className="w-full max-w-md space-y-8 text-left">
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-[0.2em] font-semibold text-brown-dark mb-4">Whom is this masterpiece for?</label>
-                    <div className="grid grid-cols-2 gap-4">
-                      {["Corporate Partner", "Newlyweds", "Family", "Personal VIP"].map((opt) => (
-                        <button
-                          key={opt}
-                          onClick={() => setRecipient(opt)}
-                          className={`py-3 px-4 border text-xs tracking-wider transition-all ${recipient === opt ? 'border-gold bg-gold/10 text-brown-dark' : 'border-gold-light/40 text-brown-light hover:border-gold/50'}`}
-                        >
-                          {opt}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] uppercase tracking-[0.2em] font-semibold text-brown-dark mb-4">What is the occasion?</label>
-                    <div className="grid grid-cols-2 gap-4">
-                      {["Wedding", "Anniversary", "Festive", "Gratitude"].map((opt) => (
-                        <button
-                          key={opt}
-                          onClick={() => setOccasion(opt)}
-                          className={`py-3 px-4 border text-xs tracking-wider transition-all ${occasion === opt ? 'border-gold bg-gold/10 text-brown-dark' : 'border-gold-light/40 text-brown-light hover:border-gold/50'}`}
-                        >
-                          {opt}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <button 
-                  disabled={!recipient || !occasion}
-                  onClick={() => setStep(2)}
-                  className="mt-16 bg-brown-dark text-white px-12 py-4 text-[11px] uppercase tracking-[0.2em] hover:bg-gold transition-colors disabled:opacity-50 disabled:hover:bg-brown-dark flex items-center gap-3"
+      {/* Primary Catalog Showcase */}
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-32 space-y-4">
+            <RefreshCw className="w-8 h-8 text-gold animate-spin" />
+            <p className="font-sans text-[10px] uppercase tracking-widest text-clay-light">Verifying catalog inventory...</p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="text-center py-24 border border-dashed border-gold-light/60 bg-ivory/30">
+            <p className="font-sans text-xs uppercase tracking-widest text-clay-light">No items found matching the selected filter.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 perspective-1500">
+            {filteredProducts.map((product, idx) => {
+              const image = getProductImage(product.slug);
+              const frameClass = getFrameClass(idx);
+              return (
+                <motion.div
+                  key={product.id}
+                  whileHover={{
+                    scale: 1.03,
+                    rotateY: 6,
+                    rotateX: -3,
+                    z: 30,
+                    boxShadow: '0 25px 50px -12px rgba(46, 37, 32, 0.15)',
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="bg-ivory border border-gold-light/40 p-6 flex flex-col justify-between cursor-pointer shadow-premium preserve-3d group"
+                  style={{ transformStyle: 'preserve-3d' }}
                 >
-                  Select Box Size <ChevronRight className="w-4 h-4" />
-                </button>
-              </motion.div>
-            )}
-
-            {/* STEP 2: Box Size */}
-            {step === 2 && (
-              <motion.div 
-                key="step2"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="flex flex-col items-center"
-              >
-                <h2 className="font-serif text-3xl mb-4">Select The Foundation</h2>
-                <p className="text-sm text-brown-light mb-12 text-center max-w-md">
-                  Choose the volume of your gift. Once selected, our AI will instantly generate the perfect curation.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-                  {[
-                    { size: 3, name: "The Petit Curation", desc: "A subtle, elegant gesture. Perfect for gratitude." },
-                    { size: 5, name: "The Signature Curation", desc: "Our classic offering. A balanced symphony of luxury." },
-                    { size: 7, name: "The Royal Curation", desc: "Uncompromising opulence. An unforgettable statement." }
-                  ].map((box) => (
+                  <div>
+                    {/* Odd shaped frame container */}
                     <div 
-                      key={box.size}
-                      onClick={() => handleBoxSelect(box.size as 3|5|7)}
-                      className={`cursor-pointer border border-gold-light/40 hover:border-gold/80 bg-background p-8 flex flex-col items-center text-center transition-all group`}
+                      className={`relative aspect-[4/3] w-full overflow-hidden ${frameClass} mb-6 border border-gold-light/30`}
+                      onClick={() => handleUnseal(product)}
                     >
-                      <Gift className={`w-10 h-10 mb-6 text-brown-light group-hover:text-gold transition-colors`} />
-                      <h3 className="font-serif text-xl text-brown-dark mb-3">{box.name}</h3>
-                      <div className="text-[10px] uppercase tracking-[0.2em] text-gold font-bold mb-4">{box.size} Items</div>
-                      <p className="text-xs text-brown-light leading-relaxed">{box.desc}</p>
-                      
-                      <div className="mt-8 text-[10px] uppercase tracking-widest text-brown-dark opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                        Generate Box <Sparkles className="w-3 h-3 text-gold"/>
+                      <Image
+                        src={image}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-[#2e2520]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span className="bg-ivory text-[#2e2520] px-4 py-2 text-[9px] uppercase tracking-widest font-semibold flex items-center gap-2 border border-gold shadow-premium">
+                          <Sparkles className="w-3.5 h-3.5 text-gold" /> Unseal Hamper
+                        </span>
                       </div>
                     </div>
-                  ))}
-                </div>
 
-                <div className="flex gap-6 mt-16">
-                  <button onClick={() => setStep(1)} className="px-8 py-4 text-[11px] uppercase tracking-[0.2em] text-brown-light hover:text-brown-dark">Back</button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 3: AI Curated Items Result */}
-            {step === 3 && (
-              <motion.div 
-                key="step3"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="flex flex-col items-center"
-              >
-                <div className="w-full flex flex-col md:flex-row justify-between items-center mb-12 pb-6 border-b border-gold-light/20 gap-6 text-center md:text-left">
-                  <div>
-                    <h2 className="font-serif text-3xl mb-2 flex items-center justify-center md:justify-start gap-3">
-                      Your AI Masterpiece <Sparkles className="w-5 h-5 text-gold"/>
-                    </h2>
-                    <p className="text-xs text-brown-light uppercase tracking-wider">
-                      Curated specifically for a {occasion} gift to a {recipient}.
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-gold font-bold">
+                        {product.category?.name || "Premium Collection"}
+                      </span>
+                      {product.isCorporate && (
+                        <span className="font-sans text-[8px] bg-clay-dark text-ivory px-2 py-0.5 uppercase tracking-widest font-medium">
+                          Corporate
+                        </span>
+                      )}
+                    </div>
+                    
+                    <h3 className="font-serif text-xl text-clay-dark mb-2 group-hover:text-gold transition-colors" onClick={() => handleUnseal(product)}>
+                      {product.name}
+                    </h3>
+                    
+                    <p className="font-sans text-xs text-clay-light leading-relaxed mb-6">
+                      {product.shortDescription || "An exquisite selection curated by our master gifting curators."}
                     </p>
                   </div>
-                  
-                  <button 
-                    onClick={() => generateCuration(boxSize as number)}
-                    className="flex items-center gap-2 text-xs uppercase tracking-widest text-brown-dark border border-gold-light/50 px-4 py-2 hover:bg-gold/10 transition-colors"
-                  >
-                    <RefreshCw className="w-3 h-3" /> Regenerate
-                  </button>
-                </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
-                  {curatedItems.map((item) => (
-                    <motion.div 
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      key={item.id}
-                      className="border border-gold/30 bg-gold/5 p-6 flex flex-col items-center text-center shadow-sm"
-                    >
-                      <div className="text-4xl mb-4">{item.icon}</div>
-                      <div className="text-[9px] uppercase tracking-[0.2em] text-brown-light mb-2">{item.type}</div>
-                      <h4 className="font-serif text-sm text-brown-dark leading-snug">{item.name}</h4>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="flex gap-6 mt-16">
-                  <button onClick={() => setStep(2)} className="px-8 py-4 text-[11px] uppercase tracking-[0.2em] text-brown-light hover:text-brown-dark">Change Size</button>
-                  <button 
-                    onClick={() => setStep(4)}
-                    className="bg-brown-dark text-white px-12 py-4 text-[11px] uppercase tracking-[0.2em] hover:bg-gold transition-colors flex items-center gap-3"
-                  >
-                    Approve Curation <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* STEP 4: Quantity & Checkout */}
-            {step === 4 && (
-              <motion.div 
-                key="step4"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="flex flex-col items-center text-center"
-              >
-                <div className="w-24 h-24 rounded-full border-2 border-gold flex items-center justify-center mb-8">
-                  <Gift className="w-10 h-10 text-gold" />
-                </div>
-                
-                <h2 className="font-serif text-4xl mb-4 text-brown-dark">The Masterpiece is Ready</h2>
-                <p className="text-sm text-brown-light mb-12 max-w-md leading-relaxed">
-                  An exquisite AI curation of {boxSize} luxury items, meticulously prepared to honor your {occasion.toLowerCase()} occasion for your {recipient.toLowerCase()}.
-                </p>
-
-                <div className="bg-white border border-gold-light/40 p-8 w-full max-w-md shadow-sm mb-12">
-                  <h3 className="text-[11px] uppercase tracking-[0.2em] font-bold text-brown-dark mb-6 border-b border-gold-light/20 pb-4">Volume Configuration</h3>
-                  
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="font-serif text-lg text-brown-dark">Quantity</span>
-                    <div className="flex items-center gap-4 border border-brown-dark p-1">
-                      <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-2 hover:bg-gold/10 text-brown-dark transition-colors"><Minus className="w-4 h-4"/></button>
-                      <span className="w-8 text-center font-sans font-medium">{quantity}</span>
-                      <button onClick={() => setQuantity(quantity + 1)} className="p-2 hover:bg-gold/10 text-brown-dark transition-colors"><Plus className="w-4 h-4"/></button>
+                  <div className="flex items-center justify-between pt-4 border-t border-gold-light/30 mt-auto">
+                    <span className="font-serif text-lg text-gold font-semibold">${Number(product.basePrice)}</span>
+                    <div className="flex gap-2">
+                      {product.category?.slug === 'hampers' ? (
+                        <Link
+                          href={`/collections/add-items?package=${product.slug}`}
+                          className="px-4 py-2 border border-gold text-gold text-[9px] uppercase tracking-widest hover:bg-gold hover:text-[#2e2520] transition-colors cursor-pointer text-center font-bold"
+                        >
+                          Customise
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => handleUnseal(product)}
+                          className="px-4 py-2 border border-gold-light/60 text-clay-dark text-[9px] uppercase tracking-widest hover:bg-gold/10 transition-colors cursor-pointer"
+                        >
+                          Unseal
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleAddToCart(product)}
+                        disabled={addingToCartId === product.id}
+                        className="bg-clay-dark text-ivory px-4 py-2 text-[9px] uppercase tracking-widest font-bold hover:bg-gold transition-colors flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-premium"
+                      >
+                        <ShoppingBag className="w-3.5 h-3.5" />
+                        {addingToCartId === product.id ? "Adding..." : addedProductId === product.id ? "Added!" : "Add to Bag"}
+                      </button>
                     </div>
                   </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
-                  <div className="bg-background p-4 flex justify-between items-center">
-                    <span className="text-xs uppercase tracking-widest text-brown-light">Estimated Total</span>
-                    <span className="font-serif text-xl text-gold">${(150 + (curatedItems.length * 40)) * quantity}</span>
+      {/* Floating Action Button for AI Concierge Helper */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <motion.button
+          onClick={() => {
+            setStep(1);
+            setIsConciergeOpen(true);
+          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-2 px-5 py-4 rounded-full bg-ivory border-2 border-gold text-gold hover:text-clay-dark hover:border-clay-dark transition-all shadow-premium cursor-pointer font-sans text-[10px] font-bold uppercase tracking-wider relative overflow-hidden group"
+        >
+          {/* Subtle gold flare overlay */}
+          <div className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <Sparkles className="w-4 h-4 text-gold group-hover:rotate-12 transition-transform" />
+          <span>AI Concierge Helper</span>
+        </motion.button>
+      </div>
+
+      {/* AI Curation Helper Slide-over Drawer */}
+      <AnimatePresence>
+        {isConciergeOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsConciergeOpen(false)}
+              className="fixed inset-0 bg-clay-dark/60 z-40 backdrop-blur-sm"
+            />
+
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 220 }}
+              className="fixed top-0 right-0 h-full w-full sm:w-[500px] z-50 bg-ivory shadow-2xl border-l border-gold-light/40 flex flex-col font-sans"
+            >
+              {/* Header */}
+              <div className="p-6 border-b border-gold-light/20 flex justify-between items-center bg-sand/30">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gold/10 p-2 rounded-full border border-gold-light/40">
+                    <Sparkles className="w-5 h-5 text-gold" />
+                  </div>
+                  <div>
+                    <h2 className="font-serif text-lg text-clay-dark">AI Concierge Assistant</h2>
+                    <p className="font-sans text-[8px] uppercase tracking-widest text-clay-light font-bold">Bespoke Curation Wizard</p>
                   </div>
                 </div>
+                <button
+                  onClick={() => setIsConciergeOpen(false)}
+                  className="p-2 border border-gold-light/30 rounded-full text-clay-light hover:text-clay-dark hover:border-gold hover:bg-gold/10 transition-all cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-                <div className="flex gap-6">
-                  <button onClick={() => setStep(3)} className="px-8 py-4 text-[11px] uppercase tracking-[0.2em] text-brown-light hover:text-brown-dark border border-transparent hover:border-gold-light/40 transition-colors">Edit Box</button>
-                  <button 
-                    className="bg-brown-dark text-white px-12 py-4 text-[11px] uppercase tracking-[0.2em] hover:bg-gold transition-colors flex items-center gap-3 shadow-xl"
+              {/* Progress steps */}
+              <div className="flex border-b border-gold-light/20 text-[8px] uppercase tracking-[0.2em] font-semibold bg-ivory/50">
+                {[1, 2, 3, 4].map((s) => (
+                  <div 
+                    key={s} 
+                    className={`flex-1 py-3 text-center transition-colors duration-500 ${step >= s ? 'bg-gold/10 text-clay-dark border-b-2 border-gold' : 'text-clay-light/40'}`}
                   >
-                    <ShoppingBag className="w-4 h-4" /> Add to Vault
-                  </button>
+                    Step {s}
+                  </div>
+                ))}
+              </div>
+
+              {/* Body */}
+              <div className="flex-1 overflow-y-auto p-8 relative flex flex-col justify-between">
+                
+                {/* Simulated Loading Overlay */}
+                <AnimatePresence>
+                  {isCurating && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 bg-ivory/95 backdrop-blur-sm z-30 flex flex-col items-center justify-center p-6 text-center"
+                    >
+                      <motion.div 
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                        className="mb-4"
+                      >
+                        <Sparkles className="w-10 h-10 text-gold" />
+                      </motion.div>
+                      <h3 className="font-serif text-xl text-clay-dark">Curating Your Masterpiece...</h3>
+                      <p className="text-[9px] uppercase tracking-[0.2em] text-clay-light mt-2 font-bold">Analyzing recipient profile & occasion</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="w-full flex-1">
+                  <AnimatePresence mode="wait">
+                    
+                    {/* STEP 1 */}
+                    {step === 1 && (
+                      <motion.div 
+                        key="step1"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="flex flex-col items-center text-center"
+                      >
+                        <Sparkles className="w-7 h-7 text-gold mb-4" />
+                        <h2 className="font-serif text-2xl mb-4 text-clay-dark">The Concierge Inquiry</h2>
+                        <p className="text-clay-light text-xs mb-8 max-w-sm leading-relaxed">
+                          Tell us who you are gifting, and our AI will automatically select the perfect luxury items to leave a lasting impression.
+                        </p>
+
+                        <div className="w-full space-y-6 text-left">
+                          <div>
+                            <label className="block text-[9px] uppercase tracking-[0.2em] font-bold text-clay-dark mb-3">Whom is this masterpiece for?</label>
+                            <div className="grid grid-cols-2 gap-3 font-sans">
+                              {["Corporate Partner", "Newlyweds", "Family", "Personal VIP"].map((opt) => (
+                                <button
+                                  key={opt}
+                                  onClick={() => setRecipient(opt)}
+                                  className={`py-3 px-3 border text-[10px] tracking-wider transition-all font-semibold uppercase rounded-none cursor-pointer ${recipient === opt ? 'border-gold bg-gold/10 text-clay-dark shadow-sm' : 'border-gold-light/40 text-clay-light hover:border-gold/60'}`}
+                                >
+                                  {opt}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[9px] uppercase tracking-[0.2em] font-bold text-clay-dark mb-3">What is the occasion?</label>
+                            <div className="grid grid-cols-2 gap-3 font-sans">
+                              {["Wedding", "Anniversary", "Festive", "Gratitude"].map((opt) => (
+                                <button
+                                  key={opt}
+                                  onClick={() => setOccasion(opt)}
+                                  className={`py-3 px-3 border text-[10px] tracking-wider transition-all font-semibold uppercase rounded-none cursor-pointer ${occasion === opt ? 'border-gold bg-gold/10 text-clay-dark shadow-sm' : 'border-gold-light/40 text-clay-light hover:border-gold/60'}`}
+                                >
+                                  {opt}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <button 
+                          disabled={!recipient || !occasion}
+                          onClick={() => setStep(2)}
+                          className="mt-12 w-full bg-clay-dark text-ivory py-4 text-[10px] uppercase tracking-[0.2em] hover:bg-gold transition-colors disabled:opacity-50 disabled:hover:bg-clay-dark flex items-center justify-center gap-3 cursor-pointer shadow-premium font-bold"
+                        >
+                          Select Box Size <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </motion.div>
+                    )}
+
+                    {/* STEP 2 */}
+                    {step === 2 && (
+                      <motion.div 
+                        key="step2"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="flex flex-col items-center"
+                      >
+                        <h2 className="font-serif text-2xl mb-2 text-clay-dark text-center">Select The Foundation</h2>
+                        <p className="text-[11px] text-clay-light mb-8 text-center max-w-sm">
+                          Choose the volume of your gift. Once selected, our AI will instantly generate the perfect curation.
+                        </p>
+
+                        <div className="space-y-4 w-full">
+                          {[
+                            { size: 3, name: "The Petit Curation", desc: "A subtle, elegant gesture. Perfect for gratitude." },
+                            { size: 5, name: "The Signature Curation", desc: "Our classic offering. A balanced symphony of luxury." },
+                            { size: 7, name: "The Royal Curation", desc: "Uncompromising opulence. An unforgettable statement." }
+                          ].map((box) => (
+                            <div 
+                              key={box.size}
+                              onClick={() => handleBoxSelect(box.size as 3|5|7)}
+                              className={`cursor-pointer border border-gold-light/40 hover:border-gold bg-ivory p-5 flex items-start gap-4 transition-all group`}
+                            >
+                              <Gift className={`w-8 h-8 text-clay-light group-hover:text-gold transition-colors shrink-0 mt-1`} />
+                              <div>
+                                <h3 className="font-serif text-base text-clay-dark mb-0.5">{box.name}</h3>
+                                <div className="text-[9px] uppercase tracking-[0.15em] text-gold font-bold mb-1">{box.size} Items</div>
+                                <p className="text-[10px] text-clay-light leading-relaxed">{box.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-4 w-full mt-10">
+                          <button onClick={() => setStep(1)} className="flex-1 py-3.5 border border-gold-light/40 text-[10px] uppercase tracking-[0.2em] text-clay-light hover:text-clay-dark hover:border-gold transition-colors cursor-pointer font-bold">
+                            Back
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* STEP 3 */}
+                    {step === 3 && (
+                      <motion.div 
+                        key="step3"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="flex flex-col items-center"
+                      >
+                        <div className="w-full pb-4 border-b border-gold-light/20 mb-6 text-center">
+                          <h2 className="font-serif text-2xl text-clay-dark mb-1 flex items-center justify-center gap-2">
+                            Your AI Masterpiece <Sparkles className="w-4 h-4 text-gold"/>
+                          </h2>
+                          <p className="text-[9px] text-clay-light uppercase tracking-wider font-bold">
+                            Curated for a {occasion} gift to a {recipient}.
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 w-full max-h-[35vh] overflow-y-auto pr-1">
+                          {curatedItems.map((item) => (
+                              <motion.div 
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                key={item.id}
+                                className="border border-gold-light/30 bg-ivory p-4 flex flex-col items-center text-center shadow-sm"
+                              >
+                                <div className="mb-2 text-gold">
+                                  <Gift className="w-6 h-6" />
+                                </div>
+                                <div className="text-[8px] uppercase tracking-[0.2em] text-clay-light mb-1 font-bold">{item.type}</div>
+                                <h4 className="font-serif text-xs text-clay-dark leading-snug">{item.name}</h4>
+                              </motion.div>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-3 w-full mt-10">
+                          <button 
+                            onClick={() => generateCuration(boxSize as number)}
+                            className="flex-1 flex items-center justify-center gap-2 text-[9px] uppercase tracking-widest text-clay-dark border border-gold-light/50 py-3.5 hover:bg-gold/10 transition-colors cursor-pointer font-bold"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" /> Regenerate
+                          </button>
+                          <button 
+                            onClick={() => setStep(4)}
+                            className="flex-1 bg-clay-dark text-ivory py-3.5 text-[9px] uppercase tracking-[0.2em] hover:bg-gold transition-colors flex items-center justify-center gap-2 cursor-pointer font-bold shadow-premium"
+                          >
+                            Approve <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <button onClick={() => setStep(2)} className="mt-4 text-[9px] uppercase tracking-[0.2em] text-clay-light hover:text-clay-dark transition-colors cursor-pointer font-bold">Change Size</button>
+                      </motion.div>
+                    )}
+
+                    {/* STEP 4 */}
+                    {step === 4 && (
+                      <motion.div 
+                        key="step4"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="flex flex-col items-center text-center"
+                      >
+                        <div className="w-16 h-16 rounded-full border border-gold flex items-center justify-center mb-6 bg-gold/5">
+                          <Gift className="w-7 h-7 text-gold" />
+                        </div>
+                        
+                        <h2 className="font-serif text-3xl mb-2 text-clay-dark">Ready for Vault</h2>
+                        <p className="text-[11px] text-clay-light mb-8 max-w-sm leading-relaxed">
+                          An exquisite AI curation of {boxSize} luxury items, meticulously prepared to honor your {occasion.toLowerCase()} occasion for your {recipient.toLowerCase()}.
+                        </p>
+
+                        <div className="bg-ivory border border-gold-light/40 p-5 w-full shadow-sm mb-8">
+                          <h3 className="text-[9px] uppercase tracking-[0.2em] font-bold text-clay-dark mb-4 border-b border-gold-light/10 pb-2">Volume Configuration</h3>
+                          
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="font-serif text-base text-clay-dark font-medium">Quantity</span>
+                            <div className="flex items-center gap-3 border border-clay-dark p-0.5">
+                              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-1.5 hover:bg-gold/10 text-clay-dark transition-colors"><Minus className="w-3 h-3"/></button>
+                              <span className="w-6 text-center font-sans font-semibold text-xs">{quantity}</span>
+                              <button onClick={() => setQuantity(quantity + 1)} className="p-1.5 hover:bg-gold/10 text-clay-dark transition-colors"><Plus className="w-3 h-3"/></button>
+                            </div>
+                          </div>
+
+                          <div className="bg-sand/30 p-3.5 flex justify-between items-center">
+                            <span className="text-[9px] uppercase tracking-widest text-clay-light font-bold">Estimated Total</span>
+                            <span className="font-serif text-lg text-gold font-bold">${(150 + (curatedItems.length * 40)) * quantity}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-3 w-full">
+                          <button onClick={() => setStep(3)} className="flex-1 py-3.5 text-[9px] uppercase tracking-[0.2em] text-clay-light hover:text-clay-dark border border-gold-light/40 transition-colors cursor-pointer font-bold">Edit Box</button>
+                          <button 
+                            onClick={handleAddAICurationToCart}
+                            disabled={addingToCartId === "ai-curation"}
+                            className="flex-1 bg-clay-dark text-ivory py-3.5 text-[9px] uppercase tracking-[0.2em] hover:bg-gold transition-colors flex items-center justify-center gap-2 shadow-premium cursor-pointer font-bold"
+                          >
+                            <ShoppingBag className="w-3.5 h-3.5" /> 
+                            {addingToCartId === "ai-curation" ? "Adding..." : "Add to Vault"}
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Premium Canister 3D Reveal Dialog */}
+      <AnimatePresence>
+        {selectedHamper && (
+          <PremiumCanister
+            theme={selectedHamper.theme}
+            title={selectedHamper.product.name}
+            items={selectedHamper.items}
+            onClose={() => setSelectedHamper(null)}
+            onProceedToCheckout={() => handleCanisterCheckout(selectedHamper.product)}
+          />
+        )}
+      </AnimatePresence>
+
     </main>
   );
 }

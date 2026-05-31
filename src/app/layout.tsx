@@ -1,18 +1,29 @@
-import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Forum, Raleway, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const forum = Forum({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: "400",
+  variable: "--font-forum",
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+const raleway = Raleway({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-raleway",
   display: "swap",
 });
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+import type { Metadata } from "next";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "The Gourmet Gifts Co.",
@@ -25,9 +36,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} scroll-smooth`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${raleway.variable} ${forum.variable} ${cormorant.variable} scroll-smooth`}>
       <body className="min-h-screen font-sans flex flex-col selection:bg-gold selection:text-white">
-        {children}
+        <Header />
+        <div style={{ flex: 1 }}>{children}</div>
+        <Footer />
       </body>
     </html>
   );
