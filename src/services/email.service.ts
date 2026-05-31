@@ -218,8 +218,76 @@ export class EmailService {
       console.log(`[STORAGE] Saved Visual Customer Email: emails/inquiry_${inquiry.id}_customer.html`);
       console.log(`[STORAGE] Saved Visual Operations Email: emails/inquiry_${inquiry.id}_admin.html`);
       console.log('=========================================\n');
+
+      // EmailJS integration
+      const serviceId = process.env.EMAILJS_SERVICE_ID;
+      const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+      const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+      const customerTemplateId = process.env.EMAILJS_TEMPLATE_ID_CUSTOMER;
+      const adminTemplateId = process.env.EMAILJS_TEMPLATE_ID_ADMIN;
+
+      if (serviceId && publicKey && (customerTemplateId || adminTemplateId)) {
+        console.log('[EmailJS] Attempting to dispatch emails...');
+        const templateParams = {
+          inquiry_id: inquiry.id,
+          company_name: inquiry.companyName,
+          contact_name: inquiry.contactName,
+          email: inquiry.email,
+          phone: inquiry.phone || 'N/A',
+          occasion: inquiry.occasion || 'N/A',
+          quantity_range: inquiry.quantityRange || 'N/A',
+          budget: budgetVal,
+          requirements: inquiry.requirements || 'None',
+        };
+
+        const sendEmail = async (templateId: string, recipientRole: string) => {
+          try {
+            const payload = {
+              service_id: serviceId,
+              template_id: templateId,
+              user_id: publicKey,
+              ...(privateKey ? { accessToken: privateKey } : {}),
+              template_params: templateParams,
+            };
+
+            const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+            });
+
+            if (response.ok) {
+              const resText = await response.text();
+              console.log(`[EmailJS] Successfully sent ${recipientRole} email via service: ${serviceId}. Response: ${resText}`);
+            } else {
+              const errText = await response.text();
+              console.error(`[EmailJS] Failed to send ${recipientRole} email. Status: ${response.status}. Error: ${errText}`);
+            }
+          } catch (err) {
+            console.error(`[EmailJS] Network error sending ${recipientRole} email:`, err);
+          }
+        };
+
+        if (customerTemplateId && customerTemplateId !== 'your_customer_template_id') {
+          await sendEmail(customerTemplateId, 'Customer');
+        } else {
+          console.log('[EmailJS] Customer template ID not configured, skipping Customer email.');
+        }
+
+        if (adminTemplateId && adminTemplateId !== 'your_admin_template_id') {
+          await sendEmail(adminTemplateId, 'Admin/Operations');
+        } else {
+          console.log('[EmailJS] Admin template ID not configured, skipping Admin/Operations email.');
+        }
+      } else {
+        console.log('[EmailJS] Skipping EmailJS dispatch (service_id, public_key, or templates not fully configured in environment).');
+      }
+
     } catch (error) {
-      console.error('[EMAIL ERROR] Failed to mock send corporate inquiry emails:', error);
+      console.error('[EMAIL ERROR] Failed to send corporate inquiry emails:', error);
     }
   }
 }
+
