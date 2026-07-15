@@ -76,7 +76,7 @@ const getProductImage = (product: any) => {
   const slug = product.slug;
   
   if (slug === "the-botanical-heritage") {
-    return "/classic_hero.png";
+    return "/productspic/frame.png";
   }
   if (slug === "the-ivory-keepsake") {
     return "/vel1.jpeg";
@@ -122,7 +122,7 @@ const getProductImage = (product: any) => {
   }
 
   // classics
-  const images = ["/classic_hero.png", "/classic.jpeg", "/classic2.jpeg", "/classic3.jpeg", "/classic4.jpeg", "/classic5.jpeg", "/classic6.jpeg"];
+  const images = ["/productspic/frame.png", "/classic.jpeg", "/classic2.jpeg", "/classic3.jpeg", "/classic4.jpeg"];
   return images[hash % images.length];
 };
 

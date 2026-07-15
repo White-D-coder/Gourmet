@@ -104,7 +104,7 @@ export default function Home() {
       <section style={{ ...styles.heroSection, height: 'auto', minHeight: '100svh', padding: '7.5rem 2rem 5rem 2rem' }}>
         <div style={styles.heroBg}>
           <Image
-            src="/luxury_pearl_backdrop.png"
+            src="/productspic/frame.png"
             alt="Minimalist Plaster Wall Backdrop"
             fill
             priority
@@ -141,16 +141,17 @@ export default function Home() {
           ))}
         </div>
 
-        <div style={styles.heroContent} className="relative z-10 w-full max-w-[850px] mx-auto flex flex-col items-center justify-center text-center">
-          {/* Upper Hero: Centered Text */}
+        <div style={styles.heroContent} className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 flex flex-col items-start justify-center text-left">
+          {/* Upper Hero: Left Aligned Text */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center text-center w-full"
+            className="flex flex-col items-start text-left w-full max-w-[700px]"
           >
-            <h1 style={{ ...styles.heroTitle, margin: '0 0 2.5rem 0', color: '#3A141A', textAlign: 'center' }} className="font-serif font-bold leading-[1.15]">
-              We create moments that make people feel valued.
+            <h1 style={{ ...styles.heroTitle, margin: '0 0 2.5rem 0', color: '#3A141A', textAlign: 'left' }} className="font-serif font-bold leading-[1.15]">
+              We create moments <br className="hidden md:inline" />
+              that make people feel valued.
             </h1>
 
             <Link 
@@ -181,7 +182,7 @@ export default function Home() {
                 className="relative aspect-[3/4] w-full overflow-hidden rounded-xl shadow-premium border border-white/10 group cursor-pointer"
               >
                 <Image 
-                  src="/classic_hero.png" 
+                  src="/productspic/frame.png" 
                   alt="The Classics Collection Packaging" 
                   fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-105" 
@@ -439,10 +440,10 @@ export default function Home() {
             className="relative w-full h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-lg border border-white/5"
           >
             <Image 
-              src="/productspic/corporate_gifting_banner.png" 
+              src="/executive_hamper.png" 
               alt="Premium corporate gift setup" 
               fill 
-              style={{ objectFit: 'cover', objectPosition: 'right' }} 
+              style={{ objectFit: 'cover', objectPosition: 'center' }} 
             />
           </motion.div>
         </div>
