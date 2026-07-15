@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <main style={styles.main}>
       {/* 2. CINEMATIC HERO SECTION */}
-      <section style={{ ...styles.heroSection, height: 'auto', minHeight: '100svh', padding: '7.5rem 2rem 5rem 2rem' }}>
+      <section style={{ ...styles.heroSection, height: 'auto', minHeight: '100svh', padding: '7.5rem 1.5rem 5rem 1.5rem', justifyContent: 'flex-start' }}>
         <div style={styles.heroBg}>
           <Image
             src="/productspic/frame.png"
@@ -141,21 +141,21 @@ export default function Home() {
           ))}
         </div>
 
-        <div style={styles.heroContent} className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 flex flex-col items-start justify-center text-left">
+        <div style={styles.heroContent} className="relative z-10 w-full pl-0 md:pl-6 lg:pl-12 flex flex-col items-start justify-start text-left">
           {/* Upper Hero: Left Aligned Text */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-start text-left w-full max-w-[700px]"
+            className="flex flex-col items-start text-left w-full max-w-[750px]"
           >
-            <h1 style={{ ...styles.heroTitle, margin: '0 0 2.5rem 0', color: '#3A141A', textAlign: 'left' }} className="font-serif font-bold leading-[1.15]">
-              We create moments <br className="hidden md:inline" />
-              that make people feel valued.
+            <h1 style={{ ...styles.heroTitle, margin: '0 0 5rem 0', color: '#FFFFFF', textAlign: 'left' }} className="font-serif font-bold leading-[1.15]">
+              We create moments <br />
+              that make people <br />feel valued.
             </h1>
 
-            <Link 
-              href="/collections" 
+            <Link
+              href="/collections"
               className="inline-flex items-center gap-3 px-7 py-3.5 bg-[#3C3F30] border border-[#B78A3F]/35 text-[#F6EFE5] text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#4A352F] transition-all rounded shadow-md cursor-pointer"
             >
               VIEW COLLECTIONS <span className="text-[9px]">→</span>
@@ -172,23 +172,23 @@ export default function Home() {
             <span style={styles.sectionPreTitle}>* signature curations *</span>
             <h2 style={styles.sectionTitle}>The Three Collections</h2>
           </div>
-          
+
           {/* Collection Cards Portal */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mt-8 relative z-10">
             {/* Card 1: The Classics */}
             <Link href="/collections?segment=classics" className="block w-full">
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -6 }}
                 className="relative aspect-[3/4] w-full overflow-hidden rounded-xl shadow-premium border border-white/10 group cursor-pointer"
               >
-                <Image 
-                  src="/productspic/frame.png" 
-                  alt="The Classics Collection Packaging" 
-                  fill 
-                  className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                <Image
+                  src="/productspic/frame.png"
+                  alt="The Classics Collection Packaging"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1F1412]/95 via-[#1F1412]/45 to-transparent z-[1]" />
-                
+
                 <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end items-start text-left">
                   <h4 className="font-serif text-xl text-white font-bold mb-1">The Classics</h4>
                   <p className="text-[10px] text-white/70 tracking-wider mb-4 font-semibold uppercase">everyday, accessible, design-led</p>
@@ -201,18 +201,18 @@ export default function Home() {
 
             {/* Card 2: Royale Tin Tin */}
             <Link href="/collections?segment=royale-tins" className="block w-full">
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -6 }}
                 className="relative aspect-[3/4] w-full overflow-hidden rounded-xl shadow-premium border border-white/10 group cursor-pointer"
               >
-                <Image 
-                  src="/royale.jpeg" 
-                  alt="Royale Tin Tin Packaging" 
-                  fill 
-                  className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                <Image
+                  src="/royale.jpeg"
+                  alt="Royale Tin Tin Packaging"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#121A16]/95 via-[#121A16]/45 to-transparent z-[1]" />
-                
+
                 <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end items-start text-left">
                   <h4 className="font-serif text-xl text-white font-bold mb-1">Royale Tin Tin</h4>
                   <p className="text-[10px] text-white/70 tracking-wider mb-4 font-semibold uppercase">collectible, heirloom metal packaging</p>
@@ -225,18 +225,18 @@ export default function Home() {
 
             {/* Card 3: Premium Velvet */}
             <Link href="/collections?segment=premium-velvet" className="block w-full">
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -6 }}
                 className="relative aspect-[3/4] w-full overflow-hidden rounded-xl shadow-premium border border-white/10 group cursor-pointer"
               >
-                <Image 
-                  src="/vel1.jpeg" 
-                  alt="Premium Velvet Packaging" 
-                  fill 
-                  className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                <Image
+                  src="/vel1.jpeg"
+                  alt="Premium Velvet Packaging"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#240A10]/95 via-[#240A10]/45 to-transparent z-[1]" />
-                
+
                 <div className="absolute inset-0 z-10 p-6 flex flex-col justify-end items-start text-left">
                   <h4 className="font-serif text-xl text-white font-bold mb-1">Premium Velvet</h4>
                   <p className="text-[10px] text-white/70 tracking-wider mb-4 font-semibold uppercase">ceremonial, high-value, tactile</p>
@@ -328,9 +328,9 @@ export default function Home() {
               Designed to be repurposed as luxury canisters for Assam tea leaves, heirloom jewelry vaults, or structural desk organisers, each tin behaves like a tactile piece of interior art in your recipient's home.
             </p>
             <div style={styles.tinBulletList}>
-              <div style={styles.tinBullet}><div style={styles.bulletDot}/> Double-walled aroma locking seal</div>
-              <div style={styles.tinBullet}><div style={styles.bulletDot}/> Anti-rust gold brushed internal plating</div>
-              <div style={styles.tinBullet}><div style={styles.bulletDot}/> 100% recyclable lead-free metal core</div>
+              <div style={styles.tinBullet}><div style={styles.bulletDot} /> Double-walled aroma locking seal</div>
+              <div style={styles.tinBullet}><div style={styles.bulletDot} /> Anti-rust gold brushed internal plating</div>
+              <div style={styles.tinBullet}><div style={styles.bulletDot} /> 100% recyclable lead-free metal core</div>
             </div>
           </div>
           <div style={styles.tinRight}>
@@ -415,15 +415,15 @@ export default function Home() {
             <p className="text-[#C2D6D3] text-sm md:text-base leading-relaxed mb-8">
               The creation and management of a gifting program might seem overwhelming to take on by yourself. We're here to take care of the heavy gifting for you.
             </p>
-            
+
             <div className="flex flex-wrap items-center gap-6">
-              <Link 
-                href="/corporate" 
+              <Link
+                href="/corporate"
                 className="px-8 py-3.5 bg-white text-[#043632] font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#F0F5F4] transition-all shadow-md"
               >
                 Get started &gt;
               </Link>
-              
+
               <div className="text-[11px] md:text-xs text-[#C2D6D3]">
                 Want to chat about gifting?<br />
                 Call us at <a href="tel:+13106201430" className="underline text-white font-semibold hover:text-[#B78A3F] transition-colors">+1 (310) 620-1430</a>
@@ -439,11 +439,11 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="relative w-full h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-lg border border-white/5"
           >
-            <Image 
-              src="/executive_hamper.png" 
-              alt="Premium corporate gift setup" 
-              fill 
-              style={{ objectFit: 'cover', objectPosition: 'center' }} 
+            <Image
+              src="/executive_hamper.png"
+              alt="Premium corporate gift setup"
+              fill
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
             />
           </motion.div>
         </div>
@@ -500,12 +500,12 @@ export default function Home() {
           <Crown size={24} style={{ color: '#B78A3F', marginBottom: 12 }} />
           <h3 style={styles.newsletterTitle}>Subscribe to The Curation Journal</h3>
           <p style={styles.newsletterDesc}>Recieve occasional alerts on seasonal limited-edition tin releases and bespoke gifting mockups.</p>
-          
+
           <AnimatePresence mode="wait">
             {!newsletterSubscribed ? (
-              <motion.form 
+              <motion.form
                 key="form"
-                onSubmit={handleSubscribe} 
+                onSubmit={handleSubscribe}
                 style={styles.newsletterForm}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -522,7 +522,7 @@ export default function Home() {
                 <button type="submit" style={styles.newsletterBtn}>Subscribe</button>
               </motion.form>
             ) : (
-              <motion.div 
+              <motion.div
                 key="success"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
