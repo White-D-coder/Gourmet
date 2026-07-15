@@ -72,45 +72,40 @@ const getCanisterDetails = (product: any) => {
   };
 };
 
-const getProductImage = (slug: string) => {
-  switch (slug) {
-    case "the-botanical-heritage":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (2).jpeg";
-    case "the-ivory-keepsake":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (3).jpeg";
-    case "the-imperial-executive":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (2).jpeg";
-    case "premium-dark-chocolate-truffles":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (1).jpeg";
-    case "single-origin-coffee-beans":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (1).jpeg";
-    case "silver-plated-tea-infuser":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (2).jpeg";
-    case "hand-poured-soy-candle":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (3).jpeg";
-    case "artisanal-roasted-makhana":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
-    case "premium-dryfruits-mix":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (3).jpeg";
-    case "blush-leather-diary":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35.jpeg";
-    case "rose-quartz-crystal-tree":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (1).jpeg";
-    case "earl-grey-royal-tea-blend":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31.jpeg";
-    case "organic-honey-lavender-jars":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33.jpeg";
-    case "gold-foil-playing-cards":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32.jpeg";
-    case "sandalwood-incense-cones":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (2).jpeg";
-    case "fine-bone-china-cup":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (1).jpeg";
-    case "belgian-waffle-crisps":
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35 (1).jpeg";
-    default:
-      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
+const getProductImage = (product: any) => {
+  const slug = product.slug;
+  
+  if (slug === "the-botanical-heritage") {
+    return "/classic_hero.png";
   }
+  if (slug === "the-ivory-keepsake") {
+    return "/vel1.jpeg";
+  }
+  if (slug === "the-imperial-executive") {
+    return "/royale.jpeg";
+  }
+
+  const segment = getProductSegment(product);
+  
+  // Deterministic hash index based on slug characters
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash += slug.charCodeAt(i);
+  }
+
+  if (segment === "premium-velvet") {
+    const images = ["/vel1.jpeg", "/vel2.jpeg", "/vel3.jpeg"];
+    return images[hash % images.length];
+  }
+
+  if (segment === "royale-tins") {
+    const images = ["/royale.jpeg", "/royale2.jpeg", "/royale3.jpeg", "/royale4.jpeg", "/royaletin.jpeg"];
+    return images[hash % images.length];
+  }
+
+  // classics
+  const images = ["/classic_hero.png", "/classic.jpeg", "/classic2.jpeg", "/classic3.jpeg", "/classic4.jpeg", "/classic5.jpeg", "/classic6.jpeg"];
+  return images[hash % images.length];
 };
 
 const getFrameClass = (index: number) => {
@@ -118,31 +113,26 @@ const getFrameClass = (index: number) => {
   return classes[index % classes.length];
 };
 
-const getProductSegment = (slug: string) => {
-  switch (slug) {
-    case "the-botanical-heritage":
-    case "premium-dark-chocolate-truffles":
-    case "artisanal-roasted-makhana":
-    case "earl-grey-royal-tea-blend":
-    case "organic-honey-lavender-jars":
-    case "belgian-waffle-crisps":
-    case "sandalwood-incense-cones":
-      return "classics";
-      
-    case "the-imperial-executive":
-    case "single-origin-coffee-beans":
-    case "gold-foil-playing-cards":
-    case "premium-dryfruits-mix":
-    case "hand-poured-soy-candle":
-      return "royale-tins";
-      
-    case "the-ivory-keepsake":
-    case "silver-plated-tea-infuser":
-    case "fine-bone-china-cup":
-    case "blush-leather-diary":
-    case "rose-quartz-crystal-tree":
+const getProductSegment = (product: any) => {
+  const slug = product.slug;
+  const catName = product.category?.name || "";
+  
+  if (slug === "the-botanical-heritage") return "classics";
+  if (slug === "the-imperial-executive") return "royale-tins";
+  if (slug === "the-ivory-keepsake") return "premium-velvet";
+
+  switch (catName) {
+    case "Crafted In-House":
+    case "Festive":
       return "premium-velvet";
-      
+    case "Drinkware":
+    case "Tech Accessories":
+    case "Desk & Stationery":
+      return "royale-tins";
+    case "Gourmet":
+    case "Wellness":
+    case "Eco & Sustainable":
+    case "Packaging":
     default:
       return "classics";
   }
@@ -334,9 +324,9 @@ function CollectionsContent() {
     .filter((product) => {
       // 1. Tab filter
       let matchesTab = true;
-      if (tabFilter === "classics") matchesTab = getProductSegment(product.slug) === "classics";
-      else if (tabFilter === "royale-tins") matchesTab = getProductSegment(product.slug) === "royale-tins";
-      else if (tabFilter === "premium-velvet") matchesTab = getProductSegment(product.slug) === "premium-velvet";
+      if (tabFilter === "classics") matchesTab = getProductSegment(product) === "classics";
+      else if (tabFilter === "royale-tins") matchesTab = getProductSegment(product) === "royale-tins";
+      else if (tabFilter === "premium-velvet") matchesTab = getProductSegment(product) === "premium-velvet";
 
       // 2. Search query filter
       let matchesSearch = true;
@@ -455,7 +445,7 @@ function CollectionsContent() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 perspective-1500">
             {filteredProducts.map((product, idx) => {
-              const image = getProductImage(product.slug);
+              const image = getProductImage(product);
               const frameClass = getFrameClass(idx);
               return (
                 <motion.div

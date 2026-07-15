@@ -1,0 +1,533 @@
+[
+  {
+    "sku": "CRF-001",
+    "name": "Velvet-Lined Wooden Keepsake Tray (Small)",
+    "category": "Crafted In-House",
+    "cost": 383.833333333333,
+    "price": 749.0,
+    "best_for": "CXO gifting, Finance",
+    "notes": "Signature hero craft"
+  },
+  {
+    "sku": "CRF-002",
+    "name": "Velvet-Lined Wooden Keepsake Tray (Large)",
+    "category": "Crafted In-House",
+    "cost": 583.333333333333,
+    "price": 1199.0,
+    "best_for": "CXO / investor boxes",
+    "notes": "Engravable lid option"
+  },
+  {
+    "sku": "CRF-003",
+    "name": "Hand-Poured Soy Candle 120g (Custom Scent)",
+    "category": "Crafted In-House",
+    "cost": 192.0,
+    "price": 399.0,
+    "best_for": "All industries",
+    "notes": "Brand-colour wax option"
+  },
+  {
+    "sku": "CRF-004",
+    "name": "Hand-Poured Soy Candle 220g (Amber Jar)",
+    "category": "Crafted In-House",
+    "cost": 266.666666666667,
+    "price": 599.0,
+    "best_for": "Premium tiers",
+    "notes": "Custom label"
+  },
+  {
+    "sku": "CRF-005",
+    "name": "Resin Coaster Set of 2 (Brand Colours)",
+    "category": "Crafted In-House",
+    "cost": 228.0,
+    "price": 349.0,
+    "best_for": "Tech, Marketing",
+    "notes": "Logo inlay possible"
+  },
+  {
+    "sku": "CRF-006",
+    "name": "Hand-Lettered Note Card + Wax Seal",
+    "category": "Crafted In-House",
+    "cost": 56.3333333333333,
+    "price": 79.0,
+    "best_for": "Every box",
+    "notes": "Your handwriting = moat"
+  },
+  {
+    "sku": "CRF-007",
+    "name": "Dried-Flower Mini Frame",
+    "category": "Crafted In-House",
+    "cost": 194.166666666667,
+    "price": 329.0,
+    "best_for": "HR milestones, EdTech",
+    "notes": "Lightweight, ships flat"
+  },
+  {
+    "sku": "CRF-008",
+    "name": "Potpourri Sachet in Block-Print Pouch",
+    "category": "Crafted In-House",
+    "cost": 89.6666666666667,
+    "price": 149.0,
+    "best_for": "Filler / aroma layer",
+    "notes": ""
+  },
+  {
+    "sku": "CRF-009",
+    "name": "Hand-Tied Fabric Gift Wrap (Furoshiki Style)",
+    "category": "Crafted In-House",
+    "cost": 105.0,
+    "price": 199.0,
+    "best_for": "Premium wrap upgrade",
+    "notes": "Reusable = eco story"
+  },
+  {
+    "sku": "CRF-010",
+    "name": "Hand-Painted Terracotta Diya Pair",
+    "category": "Crafted In-House",
+    "cost": 140.333333333333,
+    "price": 229.0,
+    "best_for": "Festive boxes",
+    "notes": "Diwali bestseller"
+  },
+  {
+    "sku": "CRF-011",
+    "name": "Custom Ribbon + Brand Tag Finishing Set",
+    "category": "Crafted In-House",
+    "cost": 47.0,
+    "price": 89.0,
+    "best_for": "Every box",
+    "notes": "In brand colours"
+  },
+  {
+    "sku": "CRF-012",
+    "name": "Mini Gratitude Journal (Hand-Bound)",
+    "category": "Crafted In-House",
+    "cost": 276.666666666667,
+    "price": 449.0,
+    "best_for": "HR, Education",
+    "notes": "Handmade paper cover"
+  },
+  {
+    "sku": "DRK-001",
+    "name": "Double-Wall Insulated Steel Bottle 750ml",
+    "category": "Drinkware",
+    "cost": 240.0,
+    "price": 449.0,
+    "best_for": "Manufacturing, Tech",
+    "notes": "Laser engraving"
+  },
+  {
+    "sku": "DRK-002",
+    "name": "Ceramic Mug (Matte, Brand Colour)",
+    "category": "Drinkware",
+    "cost": 110.0,
+    "price": 249.0,
+    "best_for": "EdTech, HR",
+    "notes": "Sleeve print"
+  },
+  {
+    "sku": "DRK-003",
+    "name": "Glass Sipper with Bamboo Lid",
+    "category": "Drinkware",
+    "cost": 130.0,
+    "price": 279.0,
+    "best_for": "Wellness tiers",
+    "notes": ""
+  },
+  {
+    "sku": "DRK-004",
+    "name": "Copper Water Bottle (Hammered)",
+    "category": "Drinkware",
+    "cost": 320.0,
+    "price": 649.0,
+    "best_for": "Finance, CXO",
+    "notes": "Ayurveda story"
+  },
+  {
+    "sku": "DRK-005",
+    "name": "Cutting Chai Glass Set of 2 + Kettle Mini",
+    "category": "Drinkware",
+    "cost": 260.0,
+    "price": 549.0,
+    "best_for": "Fun/team boxes",
+    "notes": "Chai nostalgia"
+  },
+  {
+    "sku": "DRK-006",
+    "name": "Travel French Press 350ml",
+    "category": "Drinkware",
+    "cost": 380.0,
+    "price": 749.0,
+    "best_for": "Tech, CS heads",
+    "notes": ""
+  },
+  {
+    "sku": "GRM-001",
+    "name": "Artisan Dry Fruit Box 200g (Trail Mix)",
+    "category": "Gourmet",
+    "cost": 180.0,
+    "price": 379.0,
+    "best_for": "All industries",
+    "notes": "6-mo shelf life"
+  },
+  {
+    "sku": "GRM-002",
+    "name": "Single-Estate Assam Tea Tin 100g",
+    "category": "Gourmet",
+    "cost": 140.0,
+    "price": 329.0,
+    "best_for": "Finance, Education",
+    "notes": "GI-tag story"
+  },
+  {
+    "sku": "GRM-003",
+    "name": "Filter Coffee Powder 250g (South Estate)",
+    "category": "Gourmet",
+    "cost": 160.0,
+    "price": 349.0,
+    "best_for": "Tech",
+    "notes": ""
+  },
+  {
+    "sku": "GRM-004",
+    "name": "Dark Chocolate Bar 70% (Bean-to-Bar, Indian)",
+    "category": "Gourmet",
+    "cost": 150.0,
+    "price": 299.0,
+    "best_for": "All industries",
+    "notes": "Vegan option"
+  },
+  {
+    "sku": "GRM-005",
+    "name": "Millet Cookie Jar 150g",
+    "category": "Gourmet",
+    "cost": 120.0,
+    "price": 269.0,
+    "best_for": "Wellness, HR",
+    "notes": "Healthy angle"
+  },
+  {
+    "sku": "GRM-006",
+    "name": "Raw Forest Honey 250g",
+    "category": "Gourmet",
+    "cost": 170.0,
+    "price": 349.0,
+    "best_for": "Finance, CXO",
+    "notes": "Farmer story"
+  },
+  {
+    "sku": "GRM-007",
+    "name": "Chai Masala + Saffron Mini Duo",
+    "category": "Gourmet",
+    "cost": 130.0,
+    "price": 289.0,
+    "best_for": "Festive",
+    "notes": ""
+  },
+  {
+    "sku": "GRM-008",
+    "name": "Gourmet Makhana Duo (2 flavours)",
+    "category": "Gourmet",
+    "cost": 140.0,
+    "price": 299.0,
+    "best_for": "Manufacturing teams",
+    "notes": ""
+  },
+  {
+    "sku": "DSK-001",
+    "name": "A5 Vegan-Leather Notebook (Debossed Logo)",
+    "category": "Desk & Stationery",
+    "cost": 160.0,
+    "price": 349.0,
+    "best_for": "All industries",
+    "notes": ""
+  },
+  {
+    "sku": "DSK-002",
+    "name": "Handmade-Paper Notebook (Seed Cover)",
+    "category": "Desk & Stationery",
+    "cost": 120.0,
+    "price": 279.0,
+    "best_for": "Education, ESG",
+    "notes": "Plantable cover"
+  },
+  {
+    "sku": "DSK-003",
+    "name": "Metal Pen (Gunmetal, Engraved)",
+    "category": "Desk & Stationery",
+    "cost": 90.0,
+    "price": 199.0,
+    "best_for": "Finance",
+    "notes": ""
+  },
+  {
+    "sku": "DSK-004",
+    "name": "Brass Paperweight (Geometric)",
+    "category": "Desk & Stationery",
+    "cost": 210.0,
+    "price": 449.0,
+    "best_for": "Finance, CXO",
+    "notes": "Moradabad craft"
+  },
+  {
+    "sku": "DSK-005",
+    "name": "Desk Plant (Jade/Succulent) in Ceramic Pot",
+    "category": "Desk & Stationery",
+    "cost": 110.0,
+    "price": 269.0,
+    "best_for": "HR, EdTech",
+    "notes": "Local delivery only"
+  },
+  {
+    "sku": "DSK-006",
+    "name": "Wooden Desk Organiser (2-Slot + Phone Dock)",
+    "category": "Desk & Stationery",
+    "cost": 260.0,
+    "price": 549.0,
+    "best_for": "Tech, Manufacturing",
+    "notes": "Channapatna option"
+  },
+  {
+    "sku": "DSK-007",
+    "name": "Sticky-Note + Flag Kit (Branded)",
+    "category": "Desk & Stationery",
+    "cost": 60.0,
+    "price": 149.0,
+    "best_for": "Education",
+    "notes": ""
+  },
+  {
+    "sku": "DSK-008",
+    "name": "Bookmark (Brass, Etched)",
+    "category": "Desk & Stationery",
+    "cost": 70.0,
+    "price": 169.0,
+    "best_for": "Education",
+    "notes": "Pairs with books"
+  },
+  {
+    "sku": "TEC-001",
+    "name": "10W Wireless Charging Pad (Fabric Top)",
+    "category": "Tech Accessories",
+    "cost": 320.0,
+    "price": 649.0,
+    "best_for": "Tech, Finance",
+    "notes": "BIS-compliant vendor"
+  },
+  {
+    "sku": "TEC-002",
+    "name": "Cable Organiser Roll (Vegan Leather)",
+    "category": "Tech Accessories",
+    "cost": 130.0,
+    "price": 289.0,
+    "best_for": "Tech",
+    "notes": ""
+  },
+  {
+    "sku": "TEC-003",
+    "name": "Laptop Sleeve 14in (Felt + Button)",
+    "category": "Tech Accessories",
+    "cost": 240.0,
+    "price": 499.0,
+    "best_for": "Tech, EdTech",
+    "notes": ""
+  },
+  {
+    "sku": "TEC-004",
+    "name": "Webcam Cover + Phone Stand Mini Kit",
+    "category": "Tech Accessories",
+    "cost": 70.0,
+    "price": 169.0,
+    "best_for": "Tech onboarding",
+    "notes": ""
+  },
+  {
+    "sku": "TEC-005",
+    "name": "Desk Mat (PU, Stitched Edge, 60x30)",
+    "category": "Tech Accessories",
+    "cost": 210.0,
+    "price": 449.0,
+    "best_for": "Tech",
+    "notes": "Logo deboss corner"
+  },
+  {
+    "sku": "TEC-006",
+    "name": "Sticker Sheet (Die-Cut, Brand Pack of 8)",
+    "category": "Tech Accessories",
+    "cost": 35.0,
+    "price": 99.0,
+    "best_for": "EdTech, Tech",
+    "notes": "Laptop culture"
+  },
+  {
+    "sku": "WEL-001",
+    "name": "Essential Oil Roll-On (De-Stress Blend)",
+    "category": "Wellness",
+    "cost": 110.0,
+    "price": 249.0,
+    "best_for": "HR, Finance",
+    "notes": ""
+  },
+  {
+    "sku": "WEL-002",
+    "name": "Herbal Tea Sampler (5 Sachets)",
+    "category": "Wellness",
+    "cost": 90.0,
+    "price": 199.0,
+    "best_for": "All industries",
+    "notes": ""
+  },
+  {
+    "sku": "WEL-003",
+    "name": "Eye Pillow (Lavender, Cotton)",
+    "category": "Wellness",
+    "cost": 95.0,
+    "price": 229.0,
+    "best_for": "HR burnout care",
+    "notes": "Women-led SHG"
+  },
+  {
+    "sku": "WEL-004",
+    "name": "Neem-Wood Comb + Lip Balm Duo",
+    "category": "Wellness",
+    "cost": 85.0,
+    "price": 199.0,
+    "best_for": "Festive filler",
+    "notes": ""
+  },
+  {
+    "sku": "WEL-005",
+    "name": "Yoga Strap + Habit Tracker Card",
+    "category": "Wellness",
+    "cost": 120.0,
+    "price": 269.0,
+    "best_for": "Wellness month kits",
+    "notes": ""
+  },
+  {
+    "sku": "ECO-001",
+    "name": "Jute Tote (Zip, Laminated Inner)",
+    "category": "Eco & Sustainable",
+    "cost": 95.0,
+    "price": 229.0,
+    "best_for": "Manufacturing, ESG",
+    "notes": ""
+  },
+  {
+    "sku": "ECO-002",
+    "name": "Bamboo Cutlery Travel Kit",
+    "category": "Eco & Sustainable",
+    "cost": 85.0,
+    "price": 199.0,
+    "best_for": "Events",
+    "notes": ""
+  },
+  {
+    "sku": "ECO-003",
+    "name": "Recycled-Cotton Notebook + Pencil Set",
+    "category": "Eco & Sustainable",
+    "cost": 90.0,
+    "price": 219.0,
+    "best_for": "Education",
+    "notes": ""
+  },
+  {
+    "sku": "ECO-004",
+    "name": "Plantable Seed-Pencil Box of 5",
+    "category": "Eco & Sustainable",
+    "cost": 60.0,
+    "price": 149.0,
+    "best_for": "EdTech, CSR tie-in",
+    "notes": ""
+  },
+  {
+    "sku": "ECO-005",
+    "name": "Cork Coaster Set of 4",
+    "category": "Eco & Sustainable",
+    "cost": 80.0,
+    "price": 189.0,
+    "best_for": "Tech, Finance",
+    "notes": ""
+  },
+  {
+    "sku": "FST-001",
+    "name": "Brass Mini Urli with Floating Wick",
+    "category": "Festive",
+    "cost": 240.0,
+    "price": 499.0,
+    "best_for": "Diwali premium",
+    "notes": ""
+  },
+  {
+    "sku": "FST-002",
+    "name": "Dry-Fruit Laddoo Box of 6 (No Preservative)",
+    "category": "Festive",
+    "cost": 160.0,
+    "price": 349.0,
+    "best_for": "Diwali",
+    "notes": "Short shelf life"
+  },
+  {
+    "sku": "FST-003",
+    "name": "Toran (Fabric, Handstitched)",
+    "category": "Festive",
+    "cost": 130.0,
+    "price": 299.0,
+    "best_for": "Diwali",
+    "notes": ""
+  },
+  {
+    "sku": "FST-004",
+    "name": "Rangoli Stencil + Colour Kit",
+    "category": "Festive",
+    "cost": 70.0,
+    "price": 169.0,
+    "best_for": "Diwali fun tier",
+    "notes": ""
+  },
+  {
+    "sku": "PKG-001",
+    "name": "Rigid Gift Box (Small, Magnetic, Kraft)",
+    "category": "Packaging",
+    "cost": 70.0,
+    "price": 0.0,
+    "best_for": "Component",
+    "notes": ""
+  },
+  {
+    "sku": "PKG-002",
+    "name": "Rigid Gift Box (Medium, Magnetic, Brand Colour)",
+    "category": "Packaging",
+    "cost": 105.0,
+    "price": 0.0,
+    "best_for": "Component",
+    "notes": ""
+  },
+  {
+    "sku": "PKG-003",
+    "name": "Rigid Gift Box (Large, Magnetic + Sleeve)",
+    "category": "Packaging",
+    "cost": 150.0,
+    "price": 0.0,
+    "best_for": "Component",
+    "notes": ""
+  },
+  {
+    "sku": "PKG-004",
+    "name": "Wood-Wool Fill + Tissue (Per Box)",
+    "category": "Packaging",
+    "cost": 18.0,
+    "price": 0.0,
+    "best_for": "Component",
+    "notes": ""
+  },
+  {
+    "sku": "PKG-005",
+    "name": "Printed Brand Insert Card",
+    "category": "Packaging",
+    "cost": 8.0,
+    "price": 0.0,
+    "best_for": "Component",
+    "notes": "QR to landing page"
+  }
+]
