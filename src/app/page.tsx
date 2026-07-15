@@ -6,6 +6,16 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Search, Crown, Gift, Sparkles, Heart, ArrowRight, CheckCircle, Mail, ShieldCheck, RefreshCw } from 'lucide-react';
 
+const GoldLeaves = ({ style }: { style: React.CSSProperties }) => (
+  <svg style={style} viewBox="0 0 100 150" fill="none" stroke="#B78A3F" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M50 150 C50 100 40 50 50 10 C50 10 30 30 30 50 C30 65 42 75 48 85" />
+    <path d="M50 120 C65 110 75 90 70 70 C65 60 52 75 50 90" />
+    <path d="M50 90 C30 80 20 60 25 40 C30 30 45 45 47 60" />
+    <path d="M50 60 C65 50 70 30 60 15 C55 10 51 25 50 35" />
+    <path d="M50 35 C40 25 35 10 25 5 C23 3 32 12 40 20" />
+  </svg>
+);
+
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
 
@@ -91,17 +101,22 @@ export default function Home() {
   return (
     <main style={styles.main}>
       {/* 2. CINEMATIC HERO SECTION */}
-      <section style={styles.heroSection}>
+      <section style={{ ...styles.heroSection, height: 'auto', minHeight: '100svh', padding: '7.5rem 2rem 5rem 2rem' }}>
         <div style={styles.heroBg}>
           <Image
-            src="/productspic/bg.avif"
+            src="/productspic/velvet_tray_hero.jpg"
             alt="Minimalist Plaster Wall Backdrop"
             fill
             priority
             quality={95}
-            className="hero-zoom-bg"
             style={{ objectFit: 'cover', objectPosition: 'center', opacity: 1.0 }}
           />
+        </div>
+
+        {/* Vector Gold Leaves in Background (Mockup Aesthetics) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+          <GoldLeaves style={{ position: 'absolute', left: '-2%', top: '15%', width: '140px', height: '220px', opacity: 0.18, transform: 'rotate(-10deg)' }} />
+          <GoldLeaves style={{ position: 'absolute', right: '-2%', top: '35%', width: '160px', height: '260px', opacity: 0.18, transform: 'rotate(20deg)' }} />
         </div>
 
         {/* Floating Rose Gold Dust Particles */}
@@ -118,7 +133,7 @@ export default function Home() {
                 height: p.size,
                 backgroundColor: '#B78A3F',
                 borderRadius: '50%',
-                opacity: 0.15,
+                opacity: 0.12,
                 animationDelay: p.delay,
                 animationDuration: p.duration,
               }}
@@ -126,96 +141,149 @@ export default function Home() {
           ))}
         </div>
 
-        <div style={styles.heroContent}>
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <div style={styles.heroContent} className="relative z-10 w-full max-w-[1200px] mx-auto">
+          {/* Upper Hero Split */}
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 w-full mb-16">
+            {/* Left Column: Heading & Taglines */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                maxWidth: '850px',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-              }}
+              className="flex-1 flex flex-col items-start text-left max-w-[620px]"
             >
-              <h1 style={{ ...styles.heroTitle, textAlign: 'center', margin: '0 0 3rem 0' }}>
+              <h1 style={{ ...styles.heroTitle, margin: '0 0 1rem 0', color: '#3A141A' }} className="font-serif font-bold text-left leading-[1.12]">
                 We create moments that make people feel valued.
               </h1>
-              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Link href="/collections" style={styles.primaryCta}>
-                  Shop The Collections
-                </Link>
-                <Link href="/bespoke" style={styles.secondaryCta}>
-                  Bespoke Commissions
-                </Link>
+              
+              {/* Gold Signature script */}
+              <div 
+                style={{ 
+                  fontFamily: '"Cormorant Garamond", "Playfair Display", Georgia, serif', 
+                  fontStyle: 'italic', 
+                  color: '#B78A3F',
+                  transform: 'rotate(-2.5deg)',
+                  transformOrigin: 'left center'
+                }} 
+                className="text-2xl md:text-3xl font-medium ml-8 mb-8"
+              >
+                The Gourmet Gifts Co.
+              </div>
+
+              <div className="text-[9px] tracking-[0.28em] text-[#4A352F] font-bold uppercase mb-2">
+                MODERN INDIAN GIFTING HOUSE
+              </div>
+              <div className="text-xs md:text-sm text-[#4A352F] font-serif italic mb-8">
+                Curated from the world. Crafted with India.
+              </div>
+
+              <Link 
+                href="/collections" 
+                className="inline-flex items-center gap-3 px-7 py-3.5 bg-[#3C3F30] border border-[#B78A3F]/35 text-[#F6EFE5] text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#4A352F] transition-all rounded shadow-md cursor-pointer"
+              >
+                VIEW COLLECTIONS <span className="text-[9px]">→</span>
+              </Link>
+            </motion.div>
+
+            {/* Right Column: Arched Moorish-style Portrait */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="relative flex justify-center items-center w-full max-w-[420px]"
+            >
+              <div className="relative w-[320px] h-[320px] md:w-[380px] md:h-[380px] overflow-hidden shadow-premium bg-[#F6EFE5] rounded-xl border border-[#B78A3F]/15 z-10">
+                <Image
+                  src="/productspic/moorish_alcove_hero.jpg"
+                  alt="Premium unboxing setup in Moorish alcove"
+                  fill
+                  priority
+                  className="object-cover"
+                />
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
 
-      {/* 3. THREE-COLLECTION PORTAL */}
-      <section style={styles.portalSection}>
-        <div style={styles.sectionHeader}>
-          <span style={styles.sectionPreTitle}>* collections portal *</span>
-          <h2 style={styles.sectionTitle}>Three Expressions of Craft</h2>
-          <p style={styles.sectionDesc}>One brand identity, structured across three physical packaging mediums.</p>
-        </div>
+          {/* Lower Grid: Collection Cards (Left) & Testimonials Envelope (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full mt-16 relative z-10">
+            {/* Left 3 Columns: Three-Collection Portal Cards */}
+            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Card 1: The Classics */}
+              <motion.div 
+                whileHover={{ y: -6 }}
+                className="bg-[#FBF9F4] border border-[#B78A3F]/20 p-5 flex flex-col justify-between shadow-premium rounded-lg"
+              >
+                <div>
+                  <div className="relative aspect-[4/3] w-full overflow-hidden border border-[#B78A3F]/10 mb-4 bg-white rounded">
+                    <Image src="/botanical_hamper.png" alt="The Classics Collection Packaging" fill style={{ objectFit: 'cover' }} />
+                  </div>
+                  <h4 className="font-serif text-lg text-[#261813] font-bold mb-1">The Classics</h4>
+                  <p className="text-[9px] tracking-wider text-[#A88978] uppercase mb-3 font-semibold">everyday, accessible, design-led</p>
+                </div>
+                <Link href="/collections?segment=classics" className="w-full text-center py-2 bg-[#3C3F30] text-[#F6EFE5] text-[9px] uppercase tracking-widest font-bold hover:bg-[#4A352F] transition-colors rounded">
+                  SHOP CLASSICS
+                </Link>
+              </motion.div>
 
-        <div style={styles.portalGrid}>
-          {/* Card 1: THE CLASSICS */}
-          <motion.div 
-            whileHover={{ y: -8 }}
-            style={{ ...styles.portalCard, backgroundColor: '#F7F1E8' }}
-            className="shadow-premium"
-          >
-            <div style={styles.portalImageContainer} className="frame-odd-2">
-              <Image src="/botanical_hamper.png" alt="The Classics Collection Packaging" fill style={{ objectFit: 'cover' }} />
-            </div>
-            <div style={styles.portalCardContent}>
-              <h3 style={{ ...styles.portalCardTitle, color: '#7A2B30' }}>The Classics</h3>
-              <p style={{ ...styles.portalCardQuote, color: '#B88F4D' }}>"Affordable was never meant to feel ordinary."</p>
-              <p style={styles.portalCardDesc}>Airy, warm, product-led. Handcrafted Everyday/Corporate gifting presented in ivory sand finishes with fine gold linework.</p>
-              <Link href="/collections?segment=classics" style={{ ...styles.portalLink, borderBottomColor: '#7A2B30' }}>Explore Classics</Link>
-            </div>
-          </motion.div>
+              {/* Card 2: Royale Tin */}
+              <motion.div 
+                whileHover={{ y: -6 }}
+                className="bg-[#FBF9F4] border border-[#2E4A3E]/30 p-5 flex flex-col justify-between shadow-premium rounded-lg"
+              >
+                <div>
+                  <div className="relative aspect-[4/3] w-full overflow-hidden border border-[#2E4A3E]/20 mb-4 bg-white rounded">
+                    <Image src="/executive_hamper.png" alt="Royale Tin Packaging" fill style={{ objectFit: 'cover' }} />
+                  </div>
+                  <h4 className="font-serif text-lg text-[#261813] font-bold mb-1">Royale Tin</h4>
+                  <p className="text-[9px] tracking-wider text-[#A88978] uppercase mb-3 font-semibold">collectible, heirloom metal packaging</p>
+                </div>
+                <Link href="/collections?segment=royale-tins" className="w-full text-center py-2 bg-[#2D453A] text-[#F6EFE5] text-[9px] uppercase tracking-widest font-bold hover:bg-[#1E3028] transition-colors rounded">
+                  EXPLORE ROYALE
+                </Link>
+              </motion.div>
 
-          {/* Card 2: ROYALE TINS */}
-          <motion.div 
-            whileHover={{ y: -8 }}
-            style={{ ...styles.portalCard, backgroundColor: '#F2E6D5', border: '1px solid #B58A40' }}
-            className="shadow-premium"
-          >
-            <div style={styles.portalImageContainer} className="frame-odd-3">
-              <Image src="/executive_hamper.png" alt="Royale Tins Collection Packaging" fill style={{ objectFit: 'cover' }} />
+              {/* Card 3: Premium Velvet */}
+              <motion.div 
+                whileHover={{ y: -6 }}
+                className="bg-[#FBF9F4] border border-[#5A1C28]/30 p-5 flex flex-col justify-between shadow-premium rounded-lg"
+              >
+                <div>
+                  <div className="relative aspect-[4/3] w-full overflow-hidden border border-[#5A1C28]/20 mb-4 bg-white rounded">
+                    <Image src="/ivory_hamper.png" alt="Premium Velvet Packaging" fill style={{ objectFit: 'cover' }} />
+                  </div>
+                  <h4 className="font-serif text-lg text-[#261813] font-bold mb-1">Premium Velvet</h4>
+                  <p className="text-[9px] tracking-wider text-[#A88978] uppercase mb-3 font-semibold">ceremonial, high-value, tactile</p>
+                </div>
+                <Link href="/collections?segment=premium-velvet" className="w-full text-center py-2 bg-[#5A1C28] text-[#F6EFE5] text-[9px] uppercase tracking-widest font-bold hover:bg-[#3D121B] transition-colors rounded">
+                  DISCOVER VELVET
+                </Link>
+              </motion.div>
             </div>
-            <div style={styles.portalCardContent}>
-              <h3 style={{ ...styles.portalCardTitle, color: '#652128' }}>Royale Tins</h3>
-              <p style={{ ...styles.portalCardQuote, color: '#B58A40' }}>"The gift that outlives the occasion."</p>
-              <p style={styles.portalCardDesc}>Heirloom, collectible, architectural. Sturdy double-walled metal containers with custom embossed botanical lids.</p>
-              <Link href="/collections?segment=royale-tins" style={{ ...styles.portalLink, borderBottomColor: '#652128' }}>Explore Royale Tins</Link>
-            </div>
-          </motion.div>
 
-          {/* Card 3: PREMIUM VELVET */}
-          <motion.div 
-            whileHover={{ y: -8 }}
-            style={{ ...styles.portalCard, backgroundColor: '#4B1723', color: '#F3E8DF' }}
-            className="shadow-premium"
-          >
-            <div style={styles.portalImageContainer} className="frame-odd-4">
-              <Image src="/ivory_hamper.png" alt="Premium Velvet Collection Packaging" fill style={{ objectFit: 'cover' }} />
+            {/* Right 1 Column: Testimonials Board Envelope */}
+            <div className="lg:col-span-1">
+              <div className="bg-[#EAE2D8] border border-[#B78A3F]/35 p-6 rounded-xl flex flex-col justify-start relative shadow-premium overflow-hidden h-full min-h-[320px]">
+                <h4 className="font-serif text-center text-lg text-[#3F151C] mb-6 font-bold uppercase tracking-wider">You were thought of.</h4>
+                
+                {/* Testimonial cards */}
+                <div className="flex flex-col gap-4 relative z-10">
+                  <div className="bg-[#FBF9F4] border border-[#B78A3F]/15 p-4 rounded shadow-sm rotate-[-1deg] translate-x-[-4px]">
+                    <p className="text-[10px] text-[#4A352F] italic leading-relaxed">
+                      "Every detail felt intentional. The packaging was kept long after the gift was opened."
+                    </p>
+                    <div className="text-[9px] text-[#B78A3F] font-bold text-right mt-2">— Maria Luné</div>
+                  </div>
+
+                  <div className="bg-[#FBF9F4] border border-[#B78A3F]/15 p-4 rounded shadow-sm rotate-[1.5deg] translate-x-[4px]">
+                    <p className="text-[10px] text-[#4A352F] italic leading-relaxed">
+                      "The bespoke copper detailing and calligraphed letter made my client feel truly honored."
+                    </p>
+                    <div className="text-[9px] text-[#B78A3F] font-bold text-right mt-2">— Rajeev D.</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style={styles.portalCardContent}>
-              <h3 style={{ ...styles.portalCardTitle, color: '#D3B16C' }}>Premium Velvet</h3>
-              <p style={{ ...styles.portalCardQuote, color: '#D3B16C' }}>"Crafted to say what words can't."</p>
-              <p style={{ ...styles.portalCardDesc, color: '#f3e8df/80' }}>Cinematic, tactile, ceremonial. Wrapped in rich velvet linings, perfect for wedding keepsakes and legacy celebrations.</p>
-              <Link href="/collections?segment=premium-velvet" style={{ ...styles.portalLink, color: '#D3B16C', borderBottomColor: '#D3B16C' }}>Explore Velvet</Link>
-            </div>
-          </motion.div>
+          </div>
+
         </div>
       </section>
 
@@ -367,34 +435,54 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. CORPORATE GIFTING BAND (Promise line headline) */}
-      <section style={styles.corporateBand}>
-        <div style={styles.corporateContent}>
-          <div style={styles.corporateHeader}>
-            <span style={styles.corporatePreTitle}>GORMETCO PRESTIGE B2B</span>
-            <h2 style={styles.corporateTitle}>On the date. As approved. Every time.</h2>
-            <p style={styles.corporateDesc}>Our enterprise commitment. Seamless fulfillment operations for national corporations, board member deliveries, and international clients.</p>
-          </div>
-
-          <div style={styles.corporateGrid}>
-            {[
-              { num: "I", title: "Personalised Mockups", desc: "Get custom box renders and engraving samples within 4 hours." },
-              { num: "II", title: "Inventory Reservation", desc: "Lock down bulk quantities of luxury teas, diaries, and sweets." },
-              { num: "III", title: "Coordinated Dispatch", desc: "Ship to single corporate offices or to thousands of individual homes." }
-            ].map((step, idx) => (
-              <div key={idx} style={styles.corporateStepCard}>
-                <span style={styles.corporateStepNum}>{step.num}</span>
-                <h4 style={styles.corporateStepTitle}>{step.title}</h4>
-                <p style={styles.corporateStepDesc}>{step.desc}</p>
+      {/* 9. CORPORATE GIFTING BAND */}
+      <section style={{ backgroundColor: '#043632', padding: '5rem 2rem', overflow: 'hidden' }} className="border-y border-white/5">
+        <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Column: Heading & Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -25 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-start text-left max-w-[540px]"
+          >
+            <h2 className="font-sans text-white font-bold text-3xl md:text-5xl leading-tight mb-6">
+              Thoughtful gifting<br />made easy
+            </h2>
+            <p className="text-[#C2D6D3] text-sm md:text-base leading-relaxed mb-8">
+              The creation and management of a gifting program might seem overwhelming to take on by yourself. We're here to take care of the heavy gifting for you.
+            </p>
+            
+            <div className="flex flex-wrap items-center gap-6">
+              <Link 
+                href="/corporate" 
+                className="px-8 py-3.5 bg-white text-[#043632] font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#F0F5F4] transition-all shadow-md"
+              >
+                Get started &gt;
+              </Link>
+              
+              <div className="text-[11px] md:text-xs text-[#C2D6D3]">
+                Want to chat about gifting?<br />
+                Call us at <a href="tel:+13106201430" className="underline text-white font-semibold hover:text-[#B78A3F] transition-colors">+1 (310) 620-1430</a>
               </div>
-            ))}
-          </div>
+            </div>
+          </motion.div>
 
-          <div style={styles.corporateAction}>
-            <Link href="/corporate" style={styles.corporateBtn}>
-              Submit Corporate Enquiry
-            </Link>
-          </div>
+          {/* Right Column: Visual Image (Right-aligned Crop) */}
+          <motion.div
+            initial={{ opacity: 0, x: 25 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative w-full h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-lg border border-white/5"
+          >
+            <Image 
+              src="/productspic/corporate_gifting_banner.png" 
+              alt="Premium corporate gift setup" 
+              fill 
+              style={{ objectFit: 'cover', objectPosition: 'right' }} 
+            />
+          </motion.div>
         </div>
       </section>
 
