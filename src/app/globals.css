@@ -1,19 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5; /* Luxurious pearl-white background */
-  --foreground: #2e2520; /* Deep charcoal clay text */
+  --background: #F6EFE5; /* --porcelain */
+  --foreground: #261813; /* --espresso */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ivory: #faf8f5;       /* Warm soft white card surface */
-  --color-sand: #f5f2eb;        /* Soft pearl-white contrast base */
-  --color-gold: #bfa16f;        /* Matte luxury gold */
-  --color-gold-light: #e6ded0;  /* Very soft gold border tint */
-  --color-clay-dark: #3a312a;   /* Dark bronze-brown text */
-  --color-clay-light: #7a6e64;  /* Muted clay text */
+  --color-porcelain: #F6EFE5;
+  --color-parchment: #E7D5BF;
+  --color-soft-sand: #D6BCA2;
+  --color-oxblood: #6B2027;
+  --color-deep-merlot: #3F151C;
+  --color-antique-gold: #B78A3F;
+  --color-champagne-gold: #D1AE68;
+  --color-espresso: #261813;
+  --color-warm-taupe: #A88978;
+  --color-pearl: #F3E8DF;
+
+  /* Compatibility mappings for existing utility classes */
+  --color-ivory: #F6EFE5;       /* --porcelain */
+  --color-sand: #E7D5BF;        /* --parchment */
+  --color-gold: #B78A3F;        /* --antique-gold */
+  --color-gold-light: #E7D5BF;  /* --parchment */
+  --color-clay-dark: #261813;   /* --espresso */
+  --color-clay-light: #A88978;  /* --warm-taupe */
   
   --font-sans: var(--font-raleway), sans-serif;
   --font-serif: var(--font-cormorant), var(--font-forum), serif;
@@ -33,10 +45,10 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #bfa16f;
+  background: #B78A3F;
 }
 
-/* 3D Parallax & Card Tilt Classes (Image 1 Carousel Style) */
+/* 3D Parallax & Card Tilt Classes */
 .perspective-1500 {
   perspective: 1500px;
 }
@@ -45,7 +57,7 @@ body {
   transform-style: preserve-3d;
 }
 
-/* Asymmetric / Odd Shapes for Frames (Image 2 style) */
+/* Asymmetric / Odd Shapes for Frames */
 .frame-odd-1 {
   border-radius: 80px 20px 80px 20px;
 }
@@ -63,11 +75,12 @@ body {
 }
 
 .shadow-premium {
-  box-shadow: 0 10px 30px -10px rgba(46, 37, 32, 0.08), 0 1px 3px rgba(46, 37, 32, 0.02);
+  /* Warm-toned shadow using a deep merlot/oxblood hue to suggest physical layers resting on another */
+  box-shadow: 0 10px 30px -10px rgba(63, 21, 28, 0.12), 0 1px 3px rgba(38, 24, 19, 0.04);
 }
 
 .gold-glow-light {
-  box-shadow: 0 0 30px 5px rgba(191, 161, 111, 0.1);
+  box-shadow: 0 0 30px 5px rgba(183, 138, 63, 0.1);
 }
 
 @keyframes spin {
@@ -78,3 +91,4 @@ body {
     transform: rotate(360deg);
   }
 }
+

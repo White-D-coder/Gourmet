@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ChevronRight, Gift, Minus, Plus, ShoppingBag, RefreshCw, X, HelpCircle, Eye, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PremiumCanister from "@/components/PremiumCanister";
 
 // Curation Helper Inventory - matches seeded database items for context coherence
@@ -75,41 +75,41 @@ const getCanisterDetails = (product: any) => {
 const getProductImage = (slug: string) => {
   switch (slug) {
     case "the-botanical-heritage":
-      return "/botanical_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (2).jpeg";
     case "the-ivory-keepsake":
-      return "/ivory_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (3).jpeg";
     case "the-imperial-executive":
-      return "/executive_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (2).jpeg";
     case "premium-dark-chocolate-truffles":
-      return "/dark_chocolate_truffles.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (1).jpeg";
     case "single-origin-coffee-beans":
-      return "/single_origin_coffee.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (1).jpeg";
     case "silver-plated-tea-infuser":
-      return "/silver_tea_infuser.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (2).jpeg";
     case "hand-poured-soy-candle":
-      return "/hand_poured_candle.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (3).jpeg";
     case "artisanal-roasted-makhana":
-      return "/roasted_makhana.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
     case "premium-dryfruits-mix":
-      return "/dryfruits_mix.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (3).jpeg";
     case "blush-leather-diary":
-      return "/leather_diary.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35.jpeg";
     case "rose-quartz-crystal-tree":
-      return "/crystal_tree.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (1).jpeg";
     case "earl-grey-royal-tea-blend":
-      return "/earl_grey_tea.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31.jpeg";
     case "organic-honey-lavender-jars":
-      return "/honey_lavender.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33.jpeg";
     case "gold-foil-playing-cards":
-      return "/gold_playing_cards.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32.jpeg";
     case "sandalwood-incense-cones":
-      return "/incense_cones.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (2).jpeg";
     case "fine-bone-china-cup":
-      return "/china_cup.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (1).jpeg";
     case "belgian-waffle-crisps":
-      return "/waffle_crisps.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35 (1).jpeg";
     default:
-      return "/product_1.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
   }
 };
 
@@ -118,20 +118,53 @@ const getFrameClass = (index: number) => {
   return classes[index % classes.length];
 };
 
-export default function Collections() {
+const getProductSegment = (slug: string) => {
+  switch (slug) {
+    case "the-botanical-heritage":
+    case "premium-dark-chocolate-truffles":
+    case "artisanal-roasted-makhana":
+    case "earl-grey-royal-tea-blend":
+    case "organic-honey-lavender-jars":
+    case "belgian-waffle-crisps":
+    case "sandalwood-incense-cones":
+      return "classics";
+      
+    case "the-imperial-executive":
+    case "single-origin-coffee-beans":
+    case "gold-foil-playing-cards":
+    case "premium-dryfruits-mix":
+    case "hand-poured-soy-candle":
+      return "royale-tins";
+      
+    case "the-ivory-keepsake":
+    case "silver-plated-tea-infuser":
+    case "fine-bone-china-cup":
+    case "blush-leather-diary":
+    case "rose-quartz-crystal-tree":
+      return "premium-velvet";
+      
+    default:
+      return "classics";
+  }
+};
+
+function CollectionsContent() {
   const router = useRouter();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [tabFilter, setTabFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("default");
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const segment = searchParams.get("segment");
+    if (segment) {
+      setTabFilter(segment);
+    }
+  }, [searchParams]);
   
-  // Interactive unboxing state
-  const [selectedHamper, setSelectedHamper] = useState<{
-    product: any;
-    theme: "rich-mahogany" | "ivory-blush" | "royal-navy" | "dark-emerald";
-    items: any[];
-  } | null>(null);
+
 
   // AI Curation Helper State
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
@@ -294,23 +327,16 @@ export default function Collections() {
     }
   };
 
-  const handleUnseal = (product: any) => {
-    const canister = getCanisterDetails(product);
-    setSelectedHamper({
-      product,
-      theme: canister.theme,
-      items: canister.items
-    });
-  };
+
 
   // Filter logic based on tabs, search query, and sorting criteria
   const filteredProducts = products
     .filter((product) => {
       // 1. Tab filter
       let matchesTab = true;
-      if (tabFilter === "hampers") matchesTab = product.category?.slug === "hampers";
-      else if (tabFilter === "corporate") matchesTab = product.isCorporate === true;
-      else if (tabFilter === "artifacts") matchesTab = product.category?.slug !== "hampers";
+      if (tabFilter === "classics") matchesTab = getProductSegment(product.slug) === "classics";
+      else if (tabFilter === "royale-tins") matchesTab = getProductSegment(product.slug) === "royale-tins";
+      else if (tabFilter === "premium-velvet") matchesTab = getProductSegment(product.slug) === "premium-velvet";
 
       // 2. Search query filter
       let matchesSearch = true;
@@ -348,31 +374,11 @@ export default function Collections() {
       <div className="max-w-4xl mx-auto text-center mb-16 relative">
         <span className="font-sans text-[10px] tracking-[0.3em] text-gold uppercase font-bold block mb-3 animate-pulse">* curated collections *</span>
         <h1 className="font-serif text-5xl md:text-6xl text-clay-dark mb-6">The Masterpiece Gallery</h1>
-        <p className="font-sans text-xs uppercase tracking-[0.25em] text-clay-light max-w-xl mx-auto leading-loose">
-          Commissioned hampers and premium artifacts for life's rarest occasions. Each selection unfolds natural integrity and artisanal majesty.
-        </p>
-
-        {/* AI helper invitation banner */}
-        <div className="mt-8 inline-flex items-center justify-center gap-6 bg-ivory/80 backdrop-blur-md border border-gold-light/40 py-3.5 px-8 rounded-full shadow-premium max-w-lg mx-auto">
-          <Sparkles className="w-4 h-4 text-gold shrink-0 animate-bounce" />
-          <span className="text-[10px] tracking-wider uppercase text-clay-dark font-medium font-sans">
-            Need help choosing? Let our AI Concierge assist you.
-          </span>
-          <button
-            onClick={() => {
-              setStep(1);
-              setIsConciergeOpen(true);
-            }}
-            className="text-[9px] uppercase tracking-widest font-bold text-gold border-b border-gold hover:text-clay-dark hover:border-clay-dark transition-all ml-2"
-          >
-            Start Assistant
-          </button>
-        </div>
       </div>
 
       {/* Tab filter row */}
       <div className="flex justify-center flex-wrap gap-4 mb-16 px-6 relative z-10">
-        {["all", "hampers", "corporate", "artifacts"].map((tab) => (
+        {["all", "classics", "royale-tins", "premium-velvet"].map((tab) => (
           <button
             key={tab}
             onClick={() => setTabFilter(tab)}
@@ -382,7 +388,7 @@ export default function Collections() {
                 : "border-gold/30 text-clay-light bg-ivory/30 hover:border-gold/80 hover:bg-ivory/70"
             }`}
           >
-            {tab === "all" ? "All Masterpieces" : tab === "hampers" ? "Curated Hampers" : tab === "corporate" ? "Corporate Prestige" : "Individual Artifacts"}
+            {tab === "all" ? "All Masterpieces" : tab === "classics" ? "The Classics" : tab === "royale-tins" ? "Royale Tins" : "Premium Velvet"}
           </button>
         ))}
       </div>
@@ -455,21 +461,16 @@ export default function Collections() {
                 <motion.div
                   key={product.id}
                   whileHover={{
-                    scale: 1.03,
-                    rotateY: 6,
-                    rotateX: -3,
-                    z: 30,
-                    boxShadow: '0 25px 50px -12px rgba(46, 37, 32, 0.15)',
+                    y: -6,
+                    boxShadow: '0 20px 35px -10px rgba(63, 21, 28, 0.18)',
                   }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="bg-ivory border border-gold-light/40 p-6 flex flex-col justify-between cursor-pointer shadow-premium preserve-3d group"
-                  style={{ transformStyle: 'preserve-3d' }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="bg-ivory border border-gold-light/40 p-6 flex flex-col justify-between cursor-pointer shadow-premium group"
                 >
                   <div>
                     {/* Odd shaped frame container */}
                     <div 
                       className={`relative aspect-[4/3] w-full overflow-hidden ${frameClass} mb-6 border border-gold-light/30`}
-                      onClick={() => handleUnseal(product)}
                     >
                       <Image
                         src={image}
@@ -477,11 +478,6 @@ export default function Collections() {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-[#2e2520]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <span className="bg-ivory text-[#2e2520] px-4 py-2 text-[9px] uppercase tracking-widest font-semibold flex items-center gap-2 border border-gold shadow-premium">
-                          <Sparkles className="w-3.5 h-3.5 text-gold" /> Unseal Hamper
-                        </span>
-                      </div>
                     </div>
 
                     <div className="flex justify-between items-start mb-3">
@@ -495,7 +491,7 @@ export default function Collections() {
                       )}
                     </div>
                     
-                    <h3 className="font-serif text-xl text-clay-dark mb-2 group-hover:text-gold transition-colors" onClick={() => handleUnseal(product)}>
+                    <h3 className="font-serif text-xl text-clay-dark mb-2 group-hover:text-gold transition-colors">
                       {product.name}
                     </h3>
                     
@@ -504,23 +500,16 @@ export default function Collections() {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-gold-light/30 mt-auto">
-                    <span className="font-serif text-lg text-gold font-semibold">${Number(product.basePrice)}</span>
+                  <div className="flex items-center justify-between pt-4 border-t border-gold-light/30 mt-auto w-full">
+                    <span className="font-serif text-[10px] tracking-widest text-gold uppercase font-bold">Signature Keepsake</span>
                     <div className="flex gap-2">
-                      {product.category?.slug === 'hampers' ? (
+                      {product.category?.slug === 'hampers' && (
                         <Link
                           href={`/collections/add-items?package=${product.slug}`}
                           className="px-4 py-2 border border-gold text-gold text-[9px] uppercase tracking-widest hover:bg-gold hover:text-[#2e2520] transition-colors cursor-pointer text-center font-bold"
                         >
                           Customise
                         </Link>
-                      ) : (
-                        <button
-                          onClick={() => handleUnseal(product)}
-                          className="px-4 py-2 border border-gold-light/60 text-clay-dark text-[9px] uppercase tracking-widest hover:bg-gold/10 transition-colors cursor-pointer"
-                        >
-                          Unseal
-                        </button>
                       )}
                       <button
                         onClick={() => handleAddToCart(product)}
@@ -847,19 +836,16 @@ export default function Collections() {
         )}
       </AnimatePresence>
 
-      {/* Premium Canister 3D Reveal Dialog */}
-      <AnimatePresence>
-        {selectedHamper && (
-          <PremiumCanister
-            theme={selectedHamper.theme}
-            title={selectedHamper.product.name}
-            items={selectedHamper.items}
-            onClose={() => setSelectedHamper(null)}
-            onProceedToCheckout={() => handleCanisterCheckout(selectedHamper.product)}
-          />
-        )}
-      </AnimatePresence>
+
 
     </main>
+  );
+}
+
+export default function Collections() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-sand flex items-center justify-center text-gold">Loading Masterpieces...</div>}>
+      <CollectionsContent />
+    </Suspense>
   );
 }

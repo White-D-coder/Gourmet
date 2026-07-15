@@ -127,9 +127,9 @@ export default function BespokeConstructor() {
     setIsSubmittingInquiry(true);
 
     const detailedRequirements = `Bespoke configuration details:
-- Base Box: ${selectedBox.label} (+$${selectedBox.priceAdjust})
-- Ribbon: ${selectedRibbon.label} (+$${selectedRibbon.priceAdjust})
-- Plaque: ${selectedPlaque.label} (+$${selectedPlaque.priceAdjust})
+- Base Box: ${selectedBox.label}
+- Ribbon: ${selectedRibbon.label}
+- Plaque: ${selectedPlaque.label}
 - Engraving Text: "${engravingText || 'None'}"
 - Greeting Card: "${giftCardText || 'None'}"
 - Target Quantity: ${quantity} units`;
@@ -174,9 +174,6 @@ export default function BespokeConstructor() {
           <p style={styles.subtitle}>BESPOKE LUXURY COMMISSION</p>
           <h1 style={styles.title}>Bespoke Favor Constructor</h1>
           <div style={styles.divider} />
-          <p style={styles.description}>
-            Curate a personal monument. Tailor each element of our luxury gift box wrapping, ribbon ties, greeting scripts, and metallic seals to fit your occasion's theme.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start relative z-10 w-full">
@@ -224,7 +221,7 @@ export default function BespokeConstructor() {
                             <div style={styles.optionHeader}>
                               <span style={styles.optionLabel}>{opt.label}</span>
                               <span style={styles.optionPrice}>
-                                {opt.priceAdjust > 0 ? `+$${opt.priceAdjust}` : 'Included'}
+                                {opt.priceAdjust > 0 ? 'Bespoke Upgrade' : 'Included'}
                               </span>
                             </div>
                             <p style={styles.optionDesc}>{opt.desc}</p>
@@ -270,7 +267,7 @@ export default function BespokeConstructor() {
                               <div style={styles.optionHeader}>
                                 <span style={styles.optionLabel}>{opt.label}</span>
                                 <span style={styles.optionPrice}>
-                                  {opt.priceAdjust > 0 ? `+$${opt.priceAdjust}` : 'Included'}
+                                  {opt.priceAdjust > 0 ? 'Bespoke Upgrade' : 'Included'}
                                 </span>
                               </div>
                               <p style={styles.optionDesc}>{opt.desc}</p>
@@ -314,7 +311,7 @@ export default function BespokeConstructor() {
                               <div style={styles.optionHeader}>
                                 <span style={styles.optionLabel}>{opt.label}</span>
                                 <span style={styles.optionPrice}>
-                                  {opt.priceAdjust > 0 ? `+$${opt.priceAdjust}` : 'Included'}
+                                  {opt.priceAdjust > 0 ? 'Bespoke Upgrade' : 'Included'}
                                 </span>
                               </div>
                               <p style={styles.optionDesc}>{opt.desc}</p>
@@ -530,22 +527,22 @@ export default function BespokeConstructor() {
               <div style={styles.summaryList}>
                 <div style={styles.summaryItem}>
                   <span>Bespoke Keepsake Box Base</span>
-                  <span>$45.00</span>
+                  <span style={{ color: '#bfa16f', fontWeight: 'bold' }}>Confirmed</span>
                 </div>
                 
                 <div style={styles.summaryItem}>
-                  <span>{selectedBox.label} upgrade</span>
-                  <span>{selectedBox.priceAdjust > 0 ? `+$${selectedBox.priceAdjust.toFixed(2)}` : '$0.00'}</span>
+                  <span>Box Style: {selectedBox.label}</span>
+                  <span style={{ color: '#bfa16f', fontWeight: 'bold' }}>Selected</span>
                 </div>
 
                 <div style={styles.summaryItem}>
-                  <span>{selectedRibbon.label} upgrade</span>
-                  <span>{selectedRibbon.priceAdjust > 0 ? `+$${selectedRibbon.priceAdjust.toFixed(2)}` : '$0.00'}</span>
+                  <span>Ribbon: {selectedRibbon.label}</span>
+                  <span style={{ color: '#bfa16f', fontWeight: 'bold' }}>Selected</span>
                 </div>
 
                 <div style={styles.summaryItem}>
-                  <span>{selectedPlaque.label} upgrade</span>
-                  <span>{selectedPlaque.priceAdjust > 0 ? `+$${selectedPlaque.priceAdjust.toFixed(2)}` : '$0.00'}</span>
+                  <span>Plaque: {selectedPlaque.label}</span>
+                  <span style={{ color: '#bfa16f', fontWeight: 'bold' }}>{selectedPlaque.id === 'plaque-none' ? 'None' : 'Selected'}</span>
                 </div>
 
                 {engravingText && (
@@ -572,17 +569,6 @@ export default function BespokeConstructor() {
                   <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={styles.counterBtn}>-</button>
                   <span style={styles.counterVal}>{quantity}</span>
                   <button onClick={() => setQuantity(quantity + 1)} style={styles.counterBtn}>+</button>
-                </div>
-              </div>
-
-              <div style={styles.priceRow}>
-                <div style={styles.priceSubRow}>
-                  <span>Unit Price:</span>
-                  <span style={styles.unitVal}>${unitPrice.toFixed(2)}</span>
-                </div>
-                <div style={styles.priceGrandRow}>
-                  <span>Total Amount:</span>
-                  <span style={styles.totalVal}>${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
 

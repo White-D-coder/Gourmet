@@ -150,25 +150,17 @@ export default function PremiumCanister({
           {/* Main 3D container assembly */}
           <motion.div 
             onClick={handleOpen}
-            className={`relative preserve-3d w-[220px] h-[340px] cursor-pointer`}
+            className={`relative w-[220px] h-[340px] cursor-pointer`}
             whileHover={animationStage === "sealed" ? { 
-              y: -8, 
-              rotateY: 8, 
-              rotateX: 4, 
-              transition: { duration: 0.5, ease: "easeOut" } 
+              y: -5,
+              transition: { duration: 0.3, ease: "easeOut" } 
             } : {}}
             animate={
-              animationStage === "sealed" 
-                ? { y: [0, -6, 0] } 
-                : animationStage === "revealed" 
-                  ? { x: -40, scale: 0.9, opacity: 0.7, pointerEvents: "none" } 
-                  : {}
+              animationStage === "revealed" 
+                ? { x: -40, scale: 0.9, opacity: 0.7, pointerEvents: "none" } 
+                : { y: 0 }
             }
-            transition={
-              animationStage === "sealed" 
-                ? { repeat: Infinity, duration: 4, ease: "easeInOut" } 
-                : { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
-            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             
             {/* 3D GLOW BEAM (during opening state) */}
@@ -336,8 +328,8 @@ export default function PremiumCanister({
             {animationStage === "sealed" && (
               <motion.div 
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{ repeat: Infinity, duration: 2 }}
+                animate={{ opacity: 0.8 }}
+                transition={{ duration: 0.4 }}
                 className="absolute bottom-[-48px] left-0 right-0 text-center z-40"
               >
                 <span className="text-[10px] tracking-[0.3em] font-semibold text-gold uppercase bg-[#1c120e]/85 px-4 py-1.5 rounded-full border border-gold/20">
@@ -454,7 +446,6 @@ export default function PremiumCanister({
 
                       <div className="text-[9px] uppercase tracking-[0.2em] text-gold-light mb-1.5 font-bold">{item.type}</div>
                       <h4 className="font-serif text-sm text-ivory mb-2 leading-snug">{item.name}</h4>
-                      <div className="text-xs text-gold font-sans font-semibold">${item.price}</div>
 
                       {/* Dropdown details overlay when tapped */}
                       <AnimatePresence>

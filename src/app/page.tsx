@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, Crown, Gift, Sparkles, Heart } from 'lucide-react';
-import PremiumCanister from '@/components/PremiumCanister';
+import { ShoppingBag, Search, Crown, Gift, Sparkles, Heart, ArrowRight, CheckCircle, Mail, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
+
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,111 +20,91 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const [selectedHamper, setSelectedHamper] = useState<{
-    theme: 'rich-mahogany' | 'ivory-blush' | 'dark-emerald' | 'royal-navy';
-    title: string;
-    items: { id: string; name: string; type: string; icon?: string; price: number; desc?: string }[];
-  } | null>(null);
-
   const particles = [
-    { left: "10%", delay: "0s", duration: "18s", size: "6px" },
-    { left: "20%", delay: "3s", duration: "24s", size: "4px" },
-    { left: "35%", delay: "1s", duration: "16s", size: "5px" },
-    { left: "50%", delay: "7s", duration: "22s", size: "3px" },
-    { left: "65%", delay: "2s", duration: "20s", size: "6px" },
-    { left: "80%", delay: "5s", duration: "18s", size: "4px" },
-    { left: "90%", delay: "4s", duration: "25s", size: "5px" },
-    { left: "15%", delay: "6s", duration: "17s", size: "3px" },
-    { left: "45%", delay: "9s", duration: "21s", size: "7px" },
-    { left: "75%", delay: "8s", duration: "19s", size: "5px" },
+    { left: "12%", delay: "0s", duration: "16s", size: "5px" },
+    { left: "24%", delay: "2s", duration: "22s", size: "4px" },
+    { left: "38%", delay: "1s", duration: "18s", size: "6px" },
+    { left: "55%", delay: "5s", duration: "24s", size: "3px" },
+    { left: "70%", delay: "3s", duration: "20s", size: "5px" },
+    { left: "85%", delay: "4s", duration: "17s", size: "4px" },
   ];
 
-  // We define 4 premium hampers for the 3D showcase
+  // static hampers list matching collections
   const hampers = [
     {
       id: 'hamper-botanical',
       slug: 'the-botanical-heritage',
       title: 'The Botanical Heritage',
-      price: '$249',
+      category: 'The Classics Collection',
+      price: 'Signature Curation',
       desc: 'A garden-inspired curation in deep mahogany wood casing. Features artisanal herbal tea blends, luxury shortbreads, and a sandalwood candle.',
       image: '/botanical_hamper.png',
-      frameClass: 'frame-odd-1', // Asymmetric curved frame 1
-      tiltClass: 'rotate-left-3d', // rotateY(15deg)
       theme: 'rich-mahogany' as const,
       items: [
-        { id: 'h1-1', name: 'Artisanal Roasted Makhana', type: 'Gourmet', price: 25, desc: 'Hand-roasted lotus seeds tossed in gourmet herbs and clarified butter.', image: '/roasted_makhana.png' },
-        { id: 'h1-2', name: 'Earl Grey Royal Tea Blend', type: 'Beverage', price: 35, desc: 'A robust black tea base infused with pure cold-pressed oil of Bergamot.', image: '/earl_grey_tea.png' },
-        { id: 'h1-3', name: 'Rose Quartz Crystal Tree', type: 'Decor', price: 95, desc: 'An elegant rose quartz crystal tree adorned with delicate brass wire and real 24k gold leaf accents.', image: '/crystal_tree.png' }
+        { id: 'h1-1', name: 'Artisanal Roasted Makhana', type: 'Gourmet', price: 0, desc: 'Hand-roasted lotus seeds tossed in gourmet herbs and clarified butter.', image: '/roasted_makhana.png' },
+        { id: 'h1-2', name: 'Earl Grey Royal Tea Blend', type: 'Beverage', price: 0, desc: 'A robust black tea base infused with pure cold-pressed oil of Bergamot.', image: '/earl_grey_tea.png' },
+        { id: 'h1-3', name: 'Rose Quartz Crystal Tree', type: 'Decor', price: 0, desc: 'An elegant rose quartz crystal tree adorned with delicate brass wire and real 24k gold leaf accents.', image: '/crystal_tree.png' }
       ]
     },
     {
       id: 'hamper-ivory',
       slug: 'the-ivory-keepsake',
       title: 'The Ivory Keepsake',
-      price: '$289',
+      category: 'Premium Velvet Collection',
+      price: 'Keepsake Curation',
       desc: 'Classic ivory fabric-wrapped celebration of life\'s milestones. Includes silver-plated tea infusers, raw honey jars, and handwritten greetings.',
       image: '/ivory_hamper.png',
-      frameClass: 'frame-odd-2', // Asymmetric curved frame 2
-      tiltClass: 'rotate-slight-left-3d', // rotateY(5deg)
       theme: 'ivory-blush' as const,
       items: [
-        { id: 'h2-1', name: 'Silver Plated Tea Infuser', type: 'Keepsake', price: 30, desc: 'Intricately designed sterling silver-plated tea strainer.', image: '/silver_tea_infuser.png' },
-        { id: 'h2-2', name: 'Fine Bone China Cup', type: 'Keepsake', price: 55, desc: 'Elegant fine bone china tea cup with gold leaf handles and trim.', image: '/china_cup.png' },
-        { id: 'h2-3', name: 'Organic Honey Lavender Jars', type: 'Gourmet', price: 20, desc: 'Small glass jar of organic honey infused with lavender buds.', image: '/honey_lavender.png' },
-        { id: 'h2-4', name: 'Premium Dark Chocolate Truffles', type: 'Gourmet', price: 25, desc: 'Velvety Ganache infused with French sea salt, covered in 70% dark chocolate.', image: '/dark_chocolate_truffles.png' }
+        { id: 'h2-1', name: 'Silver Plated Tea Infuser', type: 'Keepsake', price: 0, desc: 'Intricately designed sterling silver-plated tea strainer.', image: '/silver_tea_infuser.png' },
+        { id: 'h2-2', name: 'Fine Bone China Cup', type: 'Keepsake', price: 0, desc: 'Elegant fine bone china tea cup with gold leaf handles and trim.', image: '/china_cup.png' },
+        { id: 'h2-3', name: 'Organic Honey Lavender Jars', type: 'Gourmet', price: 0, desc: 'Small glass jar of organic honey infused with lavender buds.', image: '/honey_lavender.png' },
+        { id: 'h2-4', name: 'Premium Dark Chocolate Truffles', type: 'Gourmet', price: 0, desc: 'Velvety Ganache infused with French sea salt, covered in 70% dark chocolate.', image: '/dark_chocolate_truffles.png' }
       ]
     },
     {
       id: 'hamper-imperial',
       slug: 'the-imperial-executive',
       title: 'The Imperial Executive',
-      price: '$350',
+      category: 'Royale Tins Collection',
+      price: 'Executive Curation',
       desc: 'Sleek walnut chest crafted for boards of directors and VIP clients. Features single-origin coffee and brass executive accessories.',
       image: '/executive_hamper.png',
-      frameClass: 'frame-odd-3', // Asymmetric curved frame 3
-      tiltClass: 'rotate-slight-right-3d', // rotateY(-5deg)
       theme: 'royal-navy' as const,
       items: [
-        { id: 'h3-1', name: 'Single Origin Coffee Beans', type: 'Beverage', price: 18, desc: 'Ethiopian Yirgacheffe medium roast with floral notes and bergamot acidity.', image: '/single_origin_coffee.png' },
-        { id: 'h3-2', name: 'Premium Dark Chocolate Truffles', type: 'Gourmet', price: 25, desc: 'Velvety Ganache infused with French sea salt, covered in 70% dark chocolate.', image: '/dark_chocolate_truffles.png' },
-        { id: 'h3-3', name: 'Blush Leather Diary', type: 'Keepsake', price: 65, desc: 'Hand-stitched top-grain Italian leather journal with custom hot-gold lettering.', image: '/leather_diary.png' },
-        { id: 'h3-4', name: 'Gold Foil Playing Cards', type: 'Keepsake', price: 40, desc: 'Premium deck of playing cards with intricate gold foil back designs.', image: '/gold_playing_cards.png' }
-      ]
-    },
-    {
-      id: 'hamper-bespoke',
-      slug: 'bespoke-gift-box',
-      title: 'Bespoke Keepsake Box',
-      price: '$180',
-      desc: 'Fully personalized, bespoke-commissioned favors and corporate gifts. Tailored to fit weddings, galas, and key milestones.',
-      image: '/luxury_pearl_backdrop.png', // Fallback display
-      frameClass: 'frame-odd-4', // Asymmetric curved frame 4
-      tiltClass: 'rotate-right-3d', // rotateY(-15deg)
-      theme: 'rich-mahogany' as const,
-      items: [
-        { id: 'h4-1', name: 'Monogrammed Brass Plate', type: 'Keepsake', price: 15, desc: 'Custom laser engraved brass plate displaying dates or names.' }
+        { id: 'h3-1', name: 'Single Origin Coffee Beans', type: 'Beverage', price: 0, desc: 'Ethiopian Yirgacheffe medium roast with floral notes and bergamot acidity.', image: '/single_origin_coffee.png' },
+        { id: 'h3-2', name: 'Premium Dark Chocolate Truffles', type: 'Gourmet', price: 0, desc: 'Velvety Ganache infused with French sea salt, covered in 70% dark chocolate.', image: '/dark_chocolate_truffles.png' },
+        { id: 'h3-3', name: 'Blush Leather Diary', type: 'Keepsake', price: 0, desc: 'Hand-stitched top-grain Italian leather journal with custom hot-gold lettering.', image: '/leather_diary.png' },
+        { id: 'h3-4', name: 'Gold Foil Playing Cards', type: 'Keepsake', price: 0, desc: 'Premium deck of playing cards with intricate gold foil back designs.', image: '/gold_playing_cards.png' }
       ]
     }
   ];
 
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newsletterEmail.trim()) {
+      setNewsletterSubscribed(true);
+      setNewsletterEmail('');
+    }
+  };
+
   return (
     <main style={styles.main}>
-      {/* 1. HERO SECTION */}
+      {/* 2. CINEMATIC HERO SECTION */}
       <section style={styles.heroSection}>
-        {/* Minimal plaster wall backdrop from user-provided image */}
         <div style={styles.heroBg}>
           <Image
-            src="/luxury_interior_backdrop.png"
-            alt="Minimalist Plaster Wall"
+            src="/productspic/bg.avif"
+            alt="Minimalist Plaster Wall Backdrop"
             fill
             priority
-            quality={100}
+            quality={95}
             className="hero-zoom-bg"
-            style={{ objectFit: 'cover', objectPosition: 'center', opacity: 0.95 }}
+            style={{ objectFit: 'cover', objectPosition: 'center', opacity: 1.0 }}
           />
         </div>
 
-        {/* Animated Rose Gold Dust Particles */}
+        {/* Floating Rose Gold Dust Particles */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 1 }}>
           {particles.map((p, idx) => (
             <div
@@ -134,9 +116,9 @@ export default function Home() {
                 left: p.left,
                 width: p.size,
                 height: p.size,
-                backgroundColor: '#bfa16f',
+                backgroundColor: '#B78A3F',
                 borderRadius: '50%',
-                opacity: 0.18,
+                opacity: 0.15,
                 animationDelay: p.delay,
                 animationDuration: p.duration,
               }}
@@ -145,219 +127,397 @@ export default function Home() {
         </div>
 
         <div style={styles.heroContent}>
-          <motion.div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              y: -scrollY * 0.55,
-              opacity: Math.max(0, 1 - scrollY / 150),
-              scale: Math.max(0.65, 1 - scrollY / 320),
-            }}
-          >
-            <motion.h1 
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-              style={styles.niraTitle}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                maxWidth: '850px',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
             >
-              The Gourmet Gifts Co.
-            </motion.h1>
-            
-            <motion.span 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ delay: 0.5, duration: 1.2 }}
-              style={styles.niraSubtitle}
-            >
-              THE CURATION HOUSE
-            </motion.span>
+              <h1 style={{ ...styles.heroTitle, textAlign: 'center', margin: '0 0 3rem 0' }}>
+                We create moments that make people feel valued.
+              </h1>
+              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Link href="/collections" style={styles.primaryCta}>
+                  Shop The Collections
+                </Link>
+                <Link href="/bespoke" style={styles.secondaryCta}>
+                  Bespoke Commissions
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. THREE-COLLECTION PORTAL */}
+      <section style={styles.portalSection}>
+        <div style={styles.sectionHeader}>
+          <span style={styles.sectionPreTitle}>* collections portal *</span>
+          <h2 style={styles.sectionTitle}>Three Expressions of Craft</h2>
+          <p style={styles.sectionDesc}>One brand identity, structured across three physical packaging mediums.</p>
+        </div>
+
+        <div style={styles.portalGrid}>
+          {/* Card 1: THE CLASSICS */}
+          <motion.div 
+            whileHover={{ y: -8 }}
+            style={{ ...styles.portalCard, backgroundColor: '#F7F1E8' }}
+            className="shadow-premium"
+          >
+            <div style={styles.portalImageContainer} className="frame-odd-2">
+              <Image src="/botanical_hamper.png" alt="The Classics Collection Packaging" fill style={{ objectFit: 'cover' }} />
+            </div>
+            <div style={styles.portalCardContent}>
+              <h3 style={{ ...styles.portalCardTitle, color: '#7A2B30' }}>The Classics</h3>
+              <p style={{ ...styles.portalCardQuote, color: '#B88F4D' }}>"Affordable was never meant to feel ordinary."</p>
+              <p style={styles.portalCardDesc}>Airy, warm, product-led. Handcrafted Everyday/Corporate gifting presented in ivory sand finishes with fine gold linework.</p>
+              <Link href="/collections?segment=classics" style={{ ...styles.portalLink, borderBottomColor: '#7A2B30' }}>Explore Classics</Link>
+            </div>
+          </motion.div>
+
+          {/* Card 2: ROYALE TINS */}
+          <motion.div 
+            whileHover={{ y: -8 }}
+            style={{ ...styles.portalCard, backgroundColor: '#F2E6D5', border: '1px solid #B58A40' }}
+            className="shadow-premium"
+          >
+            <div style={styles.portalImageContainer} className="frame-odd-3">
+              <Image src="/executive_hamper.png" alt="Royale Tins Collection Packaging" fill style={{ objectFit: 'cover' }} />
+            </div>
+            <div style={styles.portalCardContent}>
+              <h3 style={{ ...styles.portalCardTitle, color: '#652128' }}>Royale Tins</h3>
+              <p style={{ ...styles.portalCardQuote, color: '#B58A40' }}>"The gift that outlives the occasion."</p>
+              <p style={styles.portalCardDesc}>Heirloom, collectible, architectural. Sturdy double-walled metal containers with custom embossed botanical lids.</p>
+              <Link href="/collections?segment=royale-tins" style={{ ...styles.portalLink, borderBottomColor: '#652128' }}>Explore Royale Tins</Link>
+            </div>
+          </motion.div>
+
+          {/* Card 3: PREMIUM VELVET */}
+          <motion.div 
+            whileHover={{ y: -8 }}
+            style={{ ...styles.portalCard, backgroundColor: '#4B1723', color: '#F3E8DF' }}
+            className="shadow-premium"
+          >
+            <div style={styles.portalImageContainer} className="frame-odd-4">
+              <Image src="/ivory_hamper.png" alt="Premium Velvet Collection Packaging" fill style={{ objectFit: 'cover' }} />
+            </div>
+            <div style={styles.portalCardContent}>
+              <h3 style={{ ...styles.portalCardTitle, color: '#D3B16C' }}>Premium Velvet</h3>
+              <p style={{ ...styles.portalCardQuote, color: '#D3B16C' }}>"Crafted to say what words can't."</p>
+              <p style={{ ...styles.portalCardDesc, color: '#f3e8df/80' }}>Cinematic, tactile, ceremonial. Wrapped in rich velvet linings, perfect for wedding keepsakes and legacy celebrations.</p>
+              <Link href="/collections?segment=premium-velvet" style={{ ...styles.portalLink, color: '#D3B16C', borderBottomColor: '#D3B16C' }}>Explore Velvet</Link>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 2. FEATURES ROW */}
-      <section style={styles.featuresSection}>
-        <div style={styles.featuresGrid}>
+      {/* 4. SHOP BY OCCASION (Image-led, no icons) */}
+      <section style={styles.occasionSection}>
+        <div style={styles.sectionHeader}>
+          <span style={styles.sectionPreTitle}>* curate by event *</span>
+          <h2 style={styles.sectionTitle}>Shop by Occasion</h2>
+        </div>
+
+        <div style={styles.occasionGrid}>
           {[
-            { title: 'Uncompromising Quality', icon: <Crown strokeWidth={1} size={32} /> },
-            { title: 'Masterfully Curated', icon: <Gift strokeWidth={1} size={32} /> },
-            { title: 'Exquisite Presentation', icon: <Sparkles strokeWidth={1} size={32} /> },
-            { title: 'Enduring Memories', icon: <Heart strokeWidth={1} size={32} /> },
-          ].map((item, i) => (
+            { title: "Wedding Keepsakes", img: "/luxury_pearl_backdrop.png", desc: "Monogrammed brass plates, velvet liners, and legacy seals." },
+            { title: "Corporate Prestige", img: "/luxury_interior_backdrop.png", desc: "Minimalist executive logs, single-origin coffee, and leather diary sets." },
+            { title: "Festive Celebrations", img: "/classic_hero.png", desc: "Embossed copper tins, organic honey, and hand-roasted makhana." },
+            { title: "Milestone Gratitude", img: "/luxury_wall_backdrop.png", desc: "Fine tea strainers, soy candles, and custom parchment letters." }
+          ].map((occ, idx) => (
+            <Link href="/collections" key={idx} style={styles.occasionCard} className="shadow-premium group">
+              <div style={styles.occasionImageWrapper}>
+                <Image src={occ.img} alt={occ.title} fill style={{ objectFit: 'cover' }} className="group-hover:scale-105 transition-transform duration-700" />
+                <div style={styles.occasionOverlay} />
+              </div>
+              <div style={styles.occasionContent}>
+                <h3 style={styles.occasionCardTitle}>{occ.title}</h3>
+                <p style={styles.occasionCardDesc}>{occ.desc}</p>
+                <span style={styles.occasionCardLink}>Explore Curation →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. SIGNATURE GIFTS GRID (No pricing) */}
+      <section style={styles.signatureSection}>
+        <div style={styles.sectionHeader}>
+          <span style={styles.sectionPreTitle}>* signature curations *</span>
+          <h2 style={styles.sectionTitle}>The Gifting Masterpieces</h2>
+          <p style={styles.sectionDesc}>Hand-sealed canister hampers designed for impactful unboxing experiences.</p>
+        </div>
+
+        <div style={styles.signatureGrid}>
+          {hampers.map((hamper) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.8 }}
-              style={styles.featureCard}
+              key={hamper.id}
+              whileHover={{ y: -5 }}
+              style={styles.signatureCard}
+              className="shadow-premium"
             >
-              <div style={styles.featureIcon}>{item.icon}</div>
-              <span style={styles.featureTitle}>{item.title}</span>
+              <div style={styles.signatureImageContainer}>
+                <Image src={hamper.image} alt={hamper.title} fill style={{ objectFit: 'cover' }} />
+              </div>
+              <div style={styles.signatureCardBody}>
+                <span style={styles.signatureCardCategory}>{hamper.category}</span>
+                <h3 style={styles.signatureCardTitle}>{hamper.title}</h3>
+                <p style={styles.signatureCardDesc}>{hamper.desc}</p>
+                <div style={styles.signatureCardFooter}>
+                  <span style={styles.signaturePriceLabel}>{hamper.price}</span>
+                  <div style={styles.signatureCardActions}>
+                    <Link href={`/collections/add-items?package=${hamper.slug}`} style={styles.customizeLink}>Customise</Link>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* 3. 3D PERSPECTIVE SHOWCASE (Image 1 and 2 hybrid styling) */}
-      <section style={styles.showcaseSection}>
-        <div style={styles.showcaseContent}>
+      {/* 6. "THE ART OF THE TIN" EDITORIAL SECTION */}
+      <section style={styles.tinSection}>
+        <div style={styles.tinWrapper}>
+          <div style={styles.tinLeft}>
+            <span style={styles.tinPreTitle}>THE CRAFT STANDARD</span>
+            <h2 style={styles.tinTitle}>The Art of the Tin</h2>
+            <div style={styles.tinDivider} />
+            <p style={styles.tinParagraph}>
+              Our signature Royale canisters are built to outlive the initial occasion. Engineered with architectural precision, double-walled premium tins preserve natural aromas while displaying intricate floral engravings and antique brass trim.
+            </p>
+            <p style={styles.tinParagraph}>
+              Designed to be repurposed as luxury canisters for Assam tea leaves, heirloom jewelry vaults, or structural desk organisers, each tin behaves like a tactile piece of interior art in your recipient's home.
+            </p>
+            <div style={styles.tinBulletList}>
+              <div style={styles.tinBullet}><div style={styles.bulletDot}/> Double-walled aroma locking seal</div>
+              <div style={styles.tinBullet}><div style={styles.bulletDot}/> Anti-rust gold brushed internal plating</div>
+              <div style={styles.tinBullet}><div style={styles.bulletDot}/> 100% recyclable lead-free metal core</div>
+            </div>
+          </div>
+          <div style={styles.tinRight}>
+            <div style={styles.tinImageFrame} className="frame-odd-3 shadow-premium">
+              <Image src="/executive_hamper.png" alt="Royale Tin details close up" fill style={{ objectFit: 'cover' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. EMOTIONAL BRAND STORY (You were thought of) */}
+      <section style={styles.brandStorySection}>
+        <div style={styles.storyBg}>
+          <Image src="/pearl_white_backdrop.png" alt="Parchment flatlay styling backdrop" fill style={{ objectFit: 'cover', opacity: 0.15 }} />
+        </div>
+        <div style={styles.storyContent}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            style={styles.showcaseHeader}
+            transition={{ duration: 1.0 }}
+            style={styles.storyCard}
+            className="shadow-premium"
           >
-            <span style={styles.showcasePreTitle}>* curated collections *</span>
-            <h2 style={styles.showcaseTitle}>The Curation Gallery</h2>
-            <p style={styles.showcaseDesc}>
-              Hover to expand card profiles. Designed with asymmetrical frames and matted border trims, echoing the organic minimal design of fine ceramics.
+            <span style={styles.storyLabel}>* inside the lid *</span>
+            <h2 style={styles.storyTitle}>"You were thought of."</h2>
+            <div style={styles.storyDivider} />
+            <p style={styles.storyText}>
+              Connection lies in the tiny details. Every Gourmet Gifts box contains this handwritten affirmation, stamped underneath the container lid. It greets the recipient the moment they break the wax seal, reminding them that this curation was designed exclusively for their joy.
             </p>
+            <Link href="/collections" style={styles.storyLink}>
+              Discover Our Ethos
+            </Link>
           </motion.div>
+        </div>
+      </section>
 
-          {/* 3D Curved Carousel Grid */}
-          <div style={styles.carouselContainer} className="perspective-1500">
-            <div style={styles.carouselRow} className="preserve-3d">
-              {hampers.map((hamper, idx) => (
-                <motion.div
-                  key={hamper.id}
-                  whileHover={{
-                    scale: 1.04,
-                    rotateY: 0,
-                    z: 50,
-                    boxShadow: '0 25px 50px -12px rgba(46, 37, 32, 0.15)',
-                  }}
-                  style={get3DTiltStyle(idx, hamper.frameClass)}
-                  onClick={() => setSelectedHamper({
-                    theme: hamper.theme,
-                    title: hamper.title,
-                    items: hamper.items
-                  })}
-                  className="shadow-premium"
-                >
-                  {/* Odd-shaped frame container */}
-                  <div style={styles.cardImageContainer} className={hamper.frameClass}>
-                    <Image
-                      src={hamper.image}
-                      alt={hamper.title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      className="group-hover:scale-105 transition-transform duration-700"
-                    />
-                    
-                    <div style={styles.cardOverlay} className="card-hover-overlay">
-                      <span style={styles.unsealBtn}>
-                        <Sparkles size={12} style={{ marginRight: 6 }} /> Unseal Hamper
-                      </span>
-                    </div>
-                  </div>
+      {/* 8. BUILD-A-GIFT TEASER */}
+      <section style={styles.teaserSection}>
+        <div style={styles.sectionHeader}>
+          <span style={styles.sectionPreTitle}>* personalized commissions *</span>
+          <h2 style={styles.sectionTitle}>Build a Custom Keepsake Box</h2>
+          <p style={styles.sectionDesc}>Four guided steps to assemble your personal monument.</p>
+        </div>
 
-                  <div style={styles.cardFooter}>
-                    <h3 style={styles.cardTitle}>{hamper.title}</h3>
-                    <p style={styles.cardDesc}>{hamper.desc}</p>
-                    <span style={styles.cardPrice}>From {hamper.price}</span>
-                  </div>
-                </motion.div>
-              ))}
+        <div style={styles.teaserGrid}>
+          {[
+            { step: "01", name: "Select Curation Case", desc: "Choose between porcelain tins, velvet-lined drawers, or dark walnut chests." },
+            { step: "02", name: "Custom Ribbon & Plaque", desc: "Drape your keepsake in custom satin ties and personalized engraved brass plaques." },
+            { step: "03", name: "Fill with Artifacts", desc: "Assemble loose-leaf teas, single-origin coffee beans, soy candles, or chocolates." },
+            { step: "04", name: "Inked Greetings", desc: "Dictate handwritten greeting notes composed on heavy parchment cards." }
+          ].map((s, idx) => (
+            <div key={idx} style={styles.teaserStepCard} className="shadow-premium">
+              <span style={styles.teaserStepNum}>{s.step}</span>
+              <h4 style={styles.teaserStepName}>{s.name}</h4>
+              <p style={styles.teaserStepDesc}>{s.desc}</p>
             </div>
+          ))}
+        </div>
+
+        <div style={styles.teaserActionWrapper}>
+          <Link href="/bespoke" style={styles.teaserBtn}>
+            Begin Your Gift
+          </Link>
+        </div>
+      </section>
+
+      {/* 9. CORPORATE GIFTING BAND (Promise line headline) */}
+      <section style={styles.corporateBand}>
+        <div style={styles.corporateContent}>
+          <div style={styles.corporateHeader}>
+            <span style={styles.corporatePreTitle}>GORMETCO PRESTIGE B2B</span>
+            <h2 style={styles.corporateTitle}>On the date. As approved. Every time.</h2>
+            <p style={styles.corporateDesc}>Our enterprise commitment. Seamless fulfillment operations for national corporations, board member deliveries, and international clients.</p>
           </div>
 
-          <div style={styles.viewAllWrapper}>
-            <Link href="/collections" style={styles.viewAllBtn}>
-              View All Masterpieces
+          <div style={styles.corporateGrid}>
+            {[
+              { num: "I", title: "Personalised Mockups", desc: "Get custom box renders and engraving samples within 4 hours." },
+              { num: "II", title: "Inventory Reservation", desc: "Lock down bulk quantities of luxury teas, diaries, and sweets." },
+              { num: "III", title: "Coordinated Dispatch", desc: "Ship to single corporate offices or to thousands of individual homes." }
+            ].map((step, idx) => (
+              <div key={idx} style={styles.corporateStepCard}>
+                <span style={styles.corporateStepNum}>{step.num}</span>
+                <h4 style={styles.corporateStepTitle}>{step.title}</h4>
+                <p style={styles.corporateStepDesc}>{step.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={styles.corporateAction}>
+            <Link href="/corporate" style={styles.corporateBtn}>
+              Submit Corporate Enquiry
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 4. PREMIUM CANISTER DIALOG */}
-      <AnimatePresence>
-        {selectedHamper && (
-          <PremiumCanister
-            theme={selectedHamper.theme}
-            title={selectedHamper.title}
-            items={selectedHamper.items}
-            onClose={() => setSelectedHamper(null)}
-          />
-        )}
-      </AnimatePresence>
+      {/* 10. CRAFT & ORIGIN STORYTELLING (Origin line) */}
+      <section style={styles.originSection}>
+        <div style={styles.originWrapper}>
+          <div style={styles.originLeft}>
+            <div style={styles.originImageFrame} className="frame-odd-4 shadow-premium">
+              <Image src="/botanical_hamper.png" alt="Artisans preparing natural ingredients" fill style={{ objectFit: 'cover' }} />
+            </div>
+          </div>
+          <div style={styles.originRight}>
+            <span style={styles.originPreTitle}>ORIGIN ETHOS</span>
+            <h2 style={styles.originTitle}>Curated from the world. Crafted with India.</h2>
+            <div style={styles.originDivider} />
+            <p style={styles.originDesc}>
+              We source our ingredients from authentic regions: Assam black teas, Coorg single-origin coffees, hand-loomed fabrics, and ethically gathered organic honey. Each element is brought to our Indian craft houses where local woodcarvers, packaging designers, and sweet makers assemble the final masterpiece under rigorous standards.
+            </p>
+            <p style={styles.originDesc}>
+              Supporting local artisan communities allows us to preserve traditional Indian techniques (such as hot-foil lettering, block printing, and custom brass casting) while delivering contemporary, minimalist presentation profiles.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 11. TESTIMONIALS (Text reviews, no stars) */}
+      <section style={styles.testimonialSection}>
+        <div style={styles.sectionHeader}>
+          <span style={styles.sectionPreTitle}>* private journals *</span>
+          <h2 style={styles.sectionTitle}>Collector Chronicles</h2>
+        </div>
+
+        <div style={styles.testimonialGrid}>
+          {[
+            { quote: "The Royale Tins are phenomenal. Our clients were stunned by the copper lid engraving and the quality of Coorg coffee beans. A serious luxury statement.", author: "Aurelia Vane, Creative Director", firm: "Vane & Co. London" },
+            { quote: "Every single wedding favor box felt like a personal heirloom. The parchment note and velvet liners made it deeply emotional for our family guests.", author: "Advik Sharma, Private Collector", firm: "Wedding Curation" },
+            { quote: "On-time delivery and impeccable mockups. Gourmet Gifts Co. has redefined our annual B2B gratitude campaigns. Highly recommended for absolute trust.", author: "Kabir Mehta, Managing Partner", firm: "Mehta Legal" }
+          ].map((t, idx) => (
+            <div key={idx} style={styles.testimonialCard} className="shadow-premium">
+              <p style={styles.testimonialQuote}>"{t.quote}"</p>
+              <div style={styles.testimonialDivider} />
+              <span style={styles.testimonialAuthor}>{t.author}</span>
+              <span style={styles.testimonialFirm}>{t.firm}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 12. NEWSLETTER BOX */}
+      <section style={styles.newsletterSection}>
+        <div style={styles.newsletterCard} className="shadow-premium">
+          <Crown size={24} style={{ color: '#B78A3F', marginBottom: 12 }} />
+          <h3 style={styles.newsletterTitle}>Subscribe to The Curation Journal</h3>
+          <p style={styles.newsletterDesc}>Recieve occasional alerts on seasonal limited-edition tin releases and bespoke gifting mockups.</p>
+          
+          <AnimatePresence mode="wait">
+            {!newsletterSubscribed ? (
+              <motion.form 
+                key="form"
+                onSubmit={handleSubscribe} 
+                style={styles.newsletterForm}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your corporate or personal email..."
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  style={styles.newsletterInput}
+                />
+                <button type="submit" style={styles.newsletterBtn}>Subscribe</button>
+              </motion.form>
+            ) : (
+              <motion.div 
+                key="success"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                style={styles.newsletterSuccess}
+              >
+                <CheckCircle size={16} style={{ color: '#B78A3F' }} />
+                <span>You have been subscribed to our seasonal letters.</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
+
+
 
       <style jsx global>{`
-        /* Gold dust particle floating animation */
+        /* Floating particles */
         .gold-dust-particle {
           animation: floatParticle infinite linear;
         }
         @keyframes floatParticle {
           0% {
-            transform: translateY(0) rotate(0deg) scale(0);
+            transform: translateY(0) rotate(0deg) scale(0.2);
             opacity: 0;
           }
           10% {
-            opacity: 0.5;
+            opacity: 0.3;
           }
           90% {
-            opacity: 0.25;
+            opacity: 0.15;
           }
           100% {
-            transform: translateY(-110vh) rotate(360deg) scale(1.3);
+            transform: translateY(-110vh) rotate(360deg) scale(1.2);
             opacity: 0;
           }
         }
 
-        /* Hero slow background image scaling zoom focused on the plant vase */
+        /* Hero zoom bg */
         .hero-zoom-bg {
-          animation: heroZoom 35s infinite ease-in-out;
+          animation: heroZoom 45s infinite ease-in-out;
           transform-origin: center;
         }
         @keyframes heroZoom {
           0% { transform: scale(1.02); }
-          50% { transform: scale(1.09); }
+          50% { transform: scale(1.08); }
           100% { transform: scale(1.02); }
-        }
-
-        /* Shimmer and shape shift on CTA button */
-        .hero-cta-btn {
-          position: relative;
-          overflow: hidden;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        }
-        .hero-cta-btn::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 50%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-          transform: skewX(-25deg);
-        }
-        .hero-cta-btn:hover::after {
-          animation: buttonShine 1.4s ease-in-out infinite;
-        }
-        .hero-cta-btn:hover {
-          background-color: #bfa16f !important;
-          box-shadow: 0 10px 25px rgba(191, 161, 111, 0.3) !important;
-          transform: translateY(-2px) scale(1.02) !important;
-          border-radius: 20px 4px 20px 4px !important;
-        }
-        @keyframes buttonShine {
-          100% { left: 150%; }
-        }
-
-        /* 3D tilt styles for cards matching Image 1 curved gallery perspective */
-        .rotate-left-3d {
-          transform: rotateY(18deg) translateZ(-80px) scale(0.96);
-        }
-        .rotate-slight-left-3d {
-          transform: rotateY(6deg) translateZ(-20px) scale(1);
-        }
-        .rotate-slight-right-3d {
-          transform: rotateY(-6deg) translateZ(-20px) scale(1);
-        }
-        .rotate-right-3d {
-          transform: rotateY(-18deg) translateZ(-80px) scale(0.96);
         }
 
         .card-hover-overlay {
@@ -368,10 +528,9 @@ export default function Home() {
           opacity: 1 !important;
         }
 
-        @media (max-width: 1024px) {
-          /* Fallback for mobile displays where 3D tilt makes it too cramped */
-          .rotate-left-3d, .rotate-slight-left-3d, .rotate-slight-right-3d, .rotate-right-3d {
-            transform: none !important;
+        @media (max-width: 991px) {
+          .mobile-stack {
+            flex-direction: column !important;
           }
         }
       `}</style>
@@ -379,38 +538,40 @@ export default function Home() {
   );
 }
 
-// 3D tilt mapping depending on carousel position
-function get3DTiltStyle(idx: number, frameClass: string): React.CSSProperties {
-  let transformClass = '';
-  if (idx === 0) transformClass = 'rotate-left-3d';
-  else if (idx === 1) transformClass = 'rotate-slight-left-3d';
-  else if (idx === 2) transformClass = 'rotate-slight-right-3d';
-  else transformClass = 'rotate-right-3d';
-
-  return {
-    ...styles.carouselCard,
-    transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease',
-    transformStyle: 'preserve-3d',
-    transform: undefined, // Let global class apply it on load
-    WebkitTransform: undefined,
-  };
-}
-
 const styles: { [key: string]: React.CSSProperties } = {
   main: {
-    backgroundColor: '#faf8f5', // Pearl-white background
-    color: '#2e2520', // Clay charcoal typography
+    backgroundColor: '#F6EFE5', // --porcelain primary bg
+    color: '#261813', // --espresso body text
     minHeight: '100vh',
     fontFamily: 'var(--font-sans)',
+    overflowX: 'hidden',
+  },
+  announcementBar: {
+    backgroundColor: '#3F151C', // --deep-merlot bg
+    color: '#F6EFE5', // --porcelain text
+    textAlign: 'center',
+    padding: '10px 20px',
+    fontSize: '0.72rem',
+    fontFamily: 'var(--font-sans)',
+    letterSpacing: '0.22em',
+    textTransform: 'uppercase',
+    zIndex: 40,
+    position: 'relative',
+    borderBottom: '1px solid rgba(183, 138, 63, 0.15)',
+  },
+  announcementText: {
+    fontWeight: '600',
   },
   heroSection: {
     position: 'relative',
     height: '100svh',
+    minHeight: '100svh',
     width: '100%',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: '6rem 2rem 2rem 2rem',
   },
   heroBg: {
     position: 'absolute',
@@ -418,250 +579,837 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: '100%',
     height: '100%',
     zIndex: 0,
-    background: 'radial-gradient(circle at center, #ffffff 0%, #faf8f5 100%)',
-  },
-  niraTitle: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: 'clamp(2.5rem, 5.5vw, 5.5rem)',
-    fontWeight: '300',
-    color: '#2e2520',
-    letterSpacing: '0.08em',
-    textAlign: 'center',
-    lineHeight: '1.2',
-    margin: 0,
-    padding: '0 1rem',
-  },
-  niraSubtitle: {
-    fontFamily: 'var(--font-sans)',
-    fontSize: '0.75rem',
-    fontWeight: '700',
-    color: '#7a6e64',
-    letterSpacing: '0.45em',
-    textTransform: 'uppercase',
-    marginTop: '1.25rem',
-    textAlign: 'center',
+    backgroundColor: '#F6EFE5',
   },
   heroContent: {
     position: 'relative',
     zIndex: 10,
-    maxWidth: '800px',
-    padding: '0 2rem',
-    textAlign: 'center',
+    maxWidth: '1200px',
+    width: '100%',
+    margin: '0 auto',
   },
-  heroTextBox: {
-    backgroundColor: 'rgba(250, 248, 245, 0.9)', // Ivory backdrop
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(191, 161, 111, 0.25)',
-    borderRadius: '40px 10px 40px 10px', // Odd shape matching Image 2
-    padding: '4rem 3rem',
-    boxShadow: '0 30px 60px -15px rgba(46, 37, 32, 0.12)',
+  heroSplit: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4rem',
+    flexWrap: 'wrap',
+  },
+  heroLeft: {
+    flex: '1 1 500px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    gap: '20px',
+    alignItems: 'flex-start',
+    textAlign: 'left',
   },
   heroPreTitle: {
     fontSize: '0.75rem',
     textTransform: 'uppercase',
     letterSpacing: '0.35em',
-    color: '#bfa16f',
+    color: '#B78A3F', // --antique-gold
     fontWeight: '700',
+    marginBottom: '1rem',
   },
   heroTitle: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: '4.5rem',
-    lineHeight: '1.05',
-    color: '#2e2520',
+    fontFamily: 'var(--font-sans)', // Sleek modern sans-serif Raleway
+    fontSize: 'clamp(2rem, 5vw, 4.5rem)',
+    lineHeight: '1.2',
+    color: '#261813',
     fontWeight: '400',
-    margin: 0,
+    margin: '0 0 2.5rem 0',
     letterSpacing: '-0.02em',
   },
-  heroParagraph: {
-    fontSize: '0.85rem',
-    lineHeight: '1.8',
-    letterSpacing: '0.15em',
-    color: '#7a6e64',
-    maxWidth: '500px',
-    margin: '0 auto',
+  heroDesc: {
+    fontSize: '0.9rem',
+    lineHeight: '1.75',
+    color: '#3E2720', // Espresso dark brown for excellent reading contrast
+    maxWidth: '520px',
+    margin: '0 0 2.5rem 0',
     fontWeight: '500',
   },
-  heroBtn: {
-    backgroundColor: '#2e2520',
-    color: '#faf8f5',
-    padding: '14px 36px',
-    borderRadius: '30px',
-    fontSize: '0.8rem',
+  heroActions: {
+    display: 'flex',
+    gap: '15px',
+    flexWrap: 'wrap',
+  },
+  primaryCta: {
+    backgroundColor: '#6B2027', // --oxblood primary CTA
+    color: '#F6EFE5',
+    padding: '14px 32px',
+    borderRadius: '4px', // 4-6px shape language
+    fontSize: '0.75rem',
     textTransform: 'uppercase',
     letterSpacing: '0.2em',
     fontWeight: '600',
     textDecoration: 'none',
-    boxShadow: '0 8px 20px rgba(46, 37, 32, 0.15)',
+    boxShadow: '0 8px 24px rgba(107, 32, 39, 0.15)',
     transition: 'all 0.3s ease',
-    marginTop: '10px',
   },
-  featuresSection: {
-    padding: '5rem 2rem',
+  secondaryCta: {
+    border: '1px solid #B78A3F', // --antique-gold border
+    color: '#261813',
+    padding: '14px 32px',
+    borderRadius: '4px',
+    fontSize: '0.75rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.2em',
+    fontWeight: '600',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
+  },
+  heroRight: {
+    flex: '1 1 400px',
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: '#faf8f5', // Ivory section
-    borderBottom: '1px solid rgba(191, 161, 111, 0.15)',
   },
-  featuresGrid: {
-    maxWidth: '1100px',
+  heroImageFrame: {
+    position: 'relative',
     width: '100%',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: '3rem',
+    maxWidth: '420px',
+    aspectRatio: '4/3',
+    overflow: 'hidden',
+    border: '1px solid rgba(183, 138, 63, 0.2)',
   },
-  featureCard: {
+  portalSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F3E8DF', // --pearl contrast base
+    borderTop: '1px solid rgba(183, 138, 63, 0.15)',
+  },
+  sectionHeader: {
+    textAlign: 'center',
+    marginBottom: '5rem',
+    maxWidth: '600px',
+    margin: '0 auto 5rem auto',
+  },
+  sectionPreTitle: {
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.3em',
+    color: '#B78A3F',
+    fontWeight: '700',
+    display: 'block',
+    marginBottom: '10px',
+  },
+  sectionTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '2.5rem',
+    fontWeight: '300',
+    color: '#261813',
+    letterSpacing: '0.01em',
+    margin: 0,
+  },
+  sectionDesc: {
+    fontSize: '0.9rem',
+    color: '#A88978',
+    marginTop: '12px',
+    lineHeight: '1.6',
+  },
+  portalGrid: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '2.5rem',
+  },
+  portalCard: {
+    borderRadius: '16px', // 16-20px editorial cards
+    padding: '2rem',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    gap: '12px',
+    justifyContent: 'space-between',
+    border: '1px solid rgba(183, 138, 63, 0.15)',
+    transition: 'transform 0.4s ease, box-shadow 0.4s ease',
   },
-  featureIcon: {
-    color: '#bfa16f',
+  portalImageContainer: {
+    position: 'relative',
+    width: '100%',
+    aspectRatio: '16/10',
+    overflow: 'hidden',
+    marginBottom: '1.5rem',
+    border: '1px solid rgba(183, 138, 63, 0.1)',
   },
-  featureTitle: {
+  portalCardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  },
+  portalCardTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.6rem',
+    fontWeight: '400',
+    margin: '0 0 4px 0',
+  },
+  portalCardQuote: {
+    fontFamily: 'var(--font-serif)',
+    fontStyle: 'italic',
+    fontSize: '0.9rem',
+    margin: '0 0 1rem 0',
+    fontWeight: '500',
+  },
+  portalCardDesc: {
+    fontSize: '0.82rem',
+    lineHeight: '1.6',
+    color: '#261813/90',
+    margin: '0 0 2rem 0',
+  },
+  portalLink: {
+    marginTop: 'auto',
+    alignSelf: 'flex-start',
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.25em',
+    textDecoration: 'none',
+    fontWeight: '700',
+    color: 'inherit',
+    borderBottom: '1px solid',
+    paddingBottom: '4px',
+    transition: 'opacity 0.2s',
+  },
+  occasionSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F6EFE5',
+    borderTop: '1px solid rgba(183, 138, 63, 0.12)',
+  },
+  occasionGrid: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+    gap: '2rem',
+  },
+  occasionCard: {
+    borderRadius: '12px', // 10-14px product cards
+    position: 'relative',
+    overflow: 'hidden',
+    aspectRatio: '3/4',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    padding: '2rem',
+    textDecoration: 'none',
+    color: '#F6EFE5',
+    border: '1px solid rgba(183, 138, 63, 0.15)',
+  },
+  occasionImageWrapper: {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+  },
+  occasionOverlay: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(to top, rgba(38, 24, 19, 0.85) 0%, rgba(38, 24, 19, 0.3) 60%, transparent 100%)',
+    zIndex: 1,
+  },
+  occasionContent: {
+    position: 'relative',
+    zIndex: 2,
+  },
+  occasionCardTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.6rem',
+    fontWeight: '300',
+    margin: '0 0 6px 0',
+  },
+  occasionCardDesc: {
     fontSize: '0.8rem',
+    lineHeight: '1.5',
+    opacity: 0.85,
+    margin: '0 0 1.25rem 0',
+  },
+  occasionCardLink: {
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.7rem',
     textTransform: 'uppercase',
     letterSpacing: '0.15em',
     fontWeight: '700',
-    color: '#3a312a',
+    color: '#B78A3F',
   },
-  showcaseSection: {
-    padding: '8rem 2rem 10rem 2rem',
-    backgroundColor: '#f5f2eb', // Soft pearl-white contrast base
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+  signatureSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#E7D5BF', // --parchment secondary bg
+    borderTop: '1px solid rgba(183, 138, 63, 0.15)',
   },
-  showcaseContent: {
+  signatureGrid: {
     maxWidth: '1200px',
-    width: '100%',
+    margin: '0 auto',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '2.5rem',
+  },
+  signatureCard: {
+    backgroundColor: '#F6EFE5', // --porcelain card bg
+    border: '1px solid rgba(183, 138, 63, 0.2)',
+    borderRadius: '12px',
+    overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  showcaseHeader: {
-    textAlign: 'center',
-    marginBottom: '5rem',
-    maxWidth: '650px',
-  },
-  showcasePreTitle: {
-    fontStyle: 'italic',
-    color: '#bfa16f',
-    fontSize: '1rem',
-    letterSpacing: '0.1em',
-    display: 'block',
-    marginBottom: '8px',
-  },
-  showcaseTitle: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: '3.6rem',
-    fontWeight: '400',
-    margin: 0,
-    color: '#2e2520',
-    letterSpacing: '0.02em',
-  },
-  showcaseDesc: {
-    fontSize: '0.95rem',
-    lineHeight: '1.6',
-    color: '#7a6e64',
-    marginTop: '12px',
-  },
-  carouselContainer: {
-    width: '100%',
-    overflow: 'visible',
-    marginTop: '2rem',
-  },
-  carouselRow: {
-    display: 'flex',
-    gap: '2rem',
-    justifyContent: 'center',
-    flexWrap: 'wrap' as const,
-  },
-  carouselCard: {
-    flex: '1 1 260px',
-    maxWidth: '280px',
-    backgroundColor: '#faf8f5', // Ivory card
-    border: '1px solid rgba(191, 161, 111, 0.15)',
-    borderRadius: '16px',
-    padding: '1rem',
-    cursor: 'pointer',
-    position: 'relative',
-  },
-  cardImageContainer: {
+  signatureImageContainer: {
     position: 'relative',
     width: '100%',
-    aspectRatio: '3/4',
+    aspectRatio: '4/3',
     overflow: 'hidden',
-    backgroundColor: '#faf8f5',
-    border: '1px solid rgba(191, 161, 111, 0.1)',
+    cursor: 'pointer',
   },
-  cardOverlay: {
+  signatureHoverOverlay: {
     position: 'absolute',
     inset: 0,
-    backgroundColor: 'rgba(58, 49, 42, 0.35)',
-    backdropFilter: 'blur(3px)',
+    backgroundColor: 'rgba(38, 24, 19, 0.3)',
+    backdropFilter: 'blur(2px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   unsealBtn: {
-    backgroundColor: '#faf8f5',
-    color: '#2e2520',
-    fontSize: '0.75rem',
+    backgroundColor: '#F6EFE5',
+    color: '#261813',
+    fontSize: '0.72rem',
     textTransform: 'uppercase',
     letterSpacing: '0.15em',
     fontWeight: '700',
     padding: '10px 18px',
-    boxShadow: '0 10px 20px rgba(46, 37, 32, 0.15)',
-    borderRadius: '20px',
+    boxShadow: '0 8px 16px rgba(38, 24, 19, 0.15)',
+    borderRadius: '4px',
     display: 'flex',
     alignItems: 'center',
   },
-  cardFooter: {
-    marginTop: '1.25rem',
-    textAlign: 'left' as const,
+  signatureCardBody: {
+    padding: '1.75rem',
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
+    flex: 1,
   },
-  cardTitle: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: '1.5rem',
-    fontWeight: '400',
-    color: '#2e2520',
-    margin: 0,
-  },
-  cardDesc: {
-    fontSize: '0.8rem',
-    lineHeight: '1.4',
-    color: '#7a6e64',
-    margin: 0,
-  },
-  cardPrice: {
-    fontSize: '0.85rem',
+  signatureCardCategory: {
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.15em',
+    color: '#B78A3F',
     fontWeight: '700',
-    color: '#bfa16f',
-    letterSpacing: '0.05em',
-    marginTop: '4px',
+    marginBottom: '8px',
+    display: 'block',
   },
-  viewAllWrapper: {
-    marginTop: '5rem',
+  signatureCardTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.45rem',
+    fontWeight: '400',
+    margin: '0 0 10px 0',
+    cursor: 'pointer',
+    transition: 'color 0.2s',
   },
-  viewAllBtn: {
-    border: '1px solid #2e2520',
-    color: '#2e2520',
-    padding: '14px 44px',
-    borderRadius: '30px',
-    fontSize: '0.8rem',
+  signatureCardDesc: {
+    fontSize: '0.82rem',
+    lineHeight: '1.6',
+    color: '#A88978',
+    margin: '0 0 1.5rem 0',
+  },
+  signatureCardFooter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '1.25rem',
+    borderTop: '1px solid rgba(183, 138, 63, 0.15)',
+    marginTop: 'auto',
+  },
+  signaturePriceLabel: {
+    fontSize: '0.75rem',
+    fontWeight: '700',
+    color: '#B78A3F',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+  },
+  signatureCardActions: {
+    display: 'flex',
+    gap: '12px',
+    alignItems: 'center',
+  },
+  unsealTextBtn: {
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: '#261813',
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.15em',
+    fontWeight: '700',
+    cursor: 'pointer',
+    borderBottom: '1px solid rgba(38, 24, 19, 0.3)',
+    paddingBottom: '2px',
+  },
+  customizeLink: {
+    backgroundColor: '#6B2027',
+    color: '#F6EFE5',
+    padding: '8px 18px',
+    borderRadius: '4px',
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.15em',
+    fontWeight: '700',
+    textDecoration: 'none',
+    boxShadow: '0 4px 12px rgba(107, 32, 39, 0.1)',
+  },
+  tinSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F6EFE5',
+    borderTop: '1px solid rgba(183, 138, 63, 0.12)',
+  },
+  tinWrapper: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    display: 'flex',
+    gap: '4rem',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  tinLeft: {
+    flex: '1 1 500px',
+    textAlign: 'left',
+  },
+  tinPreTitle: {
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.3em',
+    color: '#B78A3F',
+    fontWeight: '700',
+    display: 'block',
+    marginBottom: '1rem',
+  },
+  tinTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '2.5rem',
+    fontWeight: '300',
+    color: '#261813',
+    margin: '0 0 1rem 0',
+  },
+  tinDivider: {
+    width: '60px',
+    height: '1px',
+    backgroundColor: '#B78A3F',
+    margin: '0 0 2rem 0',
+  },
+  tinParagraph: {
+    fontSize: '0.9rem',
+    lineHeight: '1.8',
+    color: '#A88978',
+    margin: '0 0 1.5rem 0',
+  },
+  tinBulletList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+    marginTop: '2rem',
+  },
+  tinBullet: {
+    fontSize: '0.82rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    fontWeight: '600',
+    color: '#261813',
+  },
+  bulletDot: {
+    width: '5px',
+    height: '5px',
+    borderRadius: '50%',
+    backgroundColor: '#B78A3F',
+  },
+  tinRight: {
+    flex: '1 1 400px',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  tinImageFrame: {
+    position: 'relative',
+    width: '100%',
+    maxWidth: '460px',
+    aspectRatio: '4/3',
+    overflow: 'hidden',
+    border: '1px solid rgba(183, 138, 63, 0.2)',
+  },
+  brandStorySection: {
+    padding: '10rem 2rem',
+    position: 'relative',
+    backgroundColor: '#3F151C', // --deep-merlot bg
+    overflow: 'hidden',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  storyBg: {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 0,
+  },
+  storyContent: {
+    position: 'relative',
+    zIndex: 2,
+    maxWidth: '700px',
+    width: '100%',
+  },
+  storyCard: {
+    backgroundColor: '#F6EFE5',
+    padding: '4rem 3rem',
+    textAlign: 'center',
+    borderRadius: '16px', // 16-20px editorial radius
+    border: '1px solid rgba(183, 138, 63, 0.25)',
+  },
+  storyLabel: {
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.3em',
+    color: '#B78A3F',
+    fontWeight: '700',
+    display: 'block',
+    marginBottom: '1rem',
+  },
+  storyTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '2.6rem',
+    fontWeight: '300',
+    color: '#261813',
+    margin: '0 0 1rem 0',
+  },
+  storyDivider: {
+    width: '50px',
+    height: '1px',
+    backgroundColor: '#B78A3F',
+    margin: '0 auto 2rem auto',
+  },
+  storyText: {
+    fontSize: '0.9rem',
+    lineHeight: '1.85',
+    color: '#A88978',
+    marginBottom: '2.5rem',
+  },
+  storyLink: {
+    display: 'inline-block',
+    fontFamily: 'var(--font-sans)',
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.2em',
+    fontWeight: '700',
+    color: '#6B2027',
+    textDecoration: 'none',
+    borderBottom: '1px solid #6B2027',
+    paddingBottom: '4px',
+  },
+  teaserSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F3E8DF',
+    borderTop: '1px solid rgba(183, 138, 63, 0.15)',
+  },
+  teaserGrid: {
+    maxWidth: '1200px',
+    margin: '0 auto 4rem auto',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: '2rem',
+  },
+  teaserStepCard: {
+    backgroundColor: '#F6EFE5',
+    padding: '2rem',
+    borderRadius: '12px',
+    border: '1px solid rgba(183, 138, 63, 0.15)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  teaserStepNum: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '2rem',
+    color: '#B78A3F',
+    fontWeight: '300',
+    marginBottom: '1rem',
+  },
+  teaserStepName: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.2rem',
+    color: '#261813',
+    fontWeight: '400',
+    margin: '0 0 8px 0',
+  },
+  teaserStepDesc: {
+    fontSize: '0.78rem',
+    lineHeight: '1.5',
+    color: '#A88978',
+    margin: 0,
+  },
+  teaserActionWrapper: {
+    textAlign: 'center',
+  },
+  teaserBtn: {
+    backgroundColor: '#6B2027',
+    color: '#F6EFE5',
+    padding: '16px 40px',
+    borderRadius: '4px',
+    fontSize: '0.78rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.22em',
+    fontWeight: '700',
+    textDecoration: 'none',
+    boxShadow: '0 8px 24px rgba(107, 32, 39, 0.18)',
+    display: 'inline-block',
+  },
+  corporateBand: {
+    padding: '8rem 2rem',
+    backgroundColor: '#3F151C', // --deep-merlot dark bg
+    color: '#F6EFE5',
+    borderTop: '1px solid rgba(183, 138, 63, 0.2)',
+  },
+  corporateContent: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+  },
+  corporateHeader: {
+    textAlign: 'center',
+    maxWidth: '650px',
+    margin: '0 auto 5rem auto',
+  },
+  corporatePreTitle: {
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.3em',
+    color: '#B78A3F',
+    fontWeight: '700',
+    display: 'block',
+    marginBottom: '1rem',
+  },
+  corporateTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '2.5rem',
+    fontWeight: '300',
+    letterSpacing: '0.02em',
+    margin: '0 0 1rem 0',
+    lineHeight: '1.2',
+  },
+  corporateDesc: {
+    fontSize: '0.9rem',
+    lineHeight: '1.75',
+    color: '#E7D5BF',
+  },
+  corporateGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '3rem',
+    marginBottom: '4rem',
+  },
+  corporateStepCard: {
+    textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  corporateStepNum: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.8rem',
+    color: '#B78A3F',
+    fontWeight: '300',
+  },
+  corporateStepTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.3rem',
+    fontWeight: '400',
+    margin: 0,
+  },
+  corporateStepDesc: {
+    fontSize: '0.82rem',
+    lineHeight: '1.6',
+    color: '#E7D5BF/80',
+  },
+  corporateAction: {
+    textAlign: 'center',
+  },
+  corporateBtn: {
+    border: '1px solid #B78A3F',
+    color: '#F6EFE5',
+    padding: '14px 36px',
+    borderRadius: '4px',
+    fontSize: '0.75rem',
     textTransform: 'uppercase',
     letterSpacing: '0.2em',
     fontWeight: '600',
     textDecoration: 'none',
     transition: 'all 0.3s ease',
+    display: 'inline-block',
+  },
+  originSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F6EFE5',
+    borderTop: '1px solid rgba(183, 138, 63, 0.12)',
+  },
+  originWrapper: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    display: 'flex',
+    gap: '4rem',
+    alignItems: 'center',
+    flexWrap: 'wrap-reverse',
+  },
+  originLeft: {
+    flex: '1 1 400px',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  originImageFrame: {
+    position: 'relative',
+    width: '100%',
+    maxWidth: '460px',
+    aspectRatio: '4/3',
+    overflow: 'hidden',
+    border: '1px solid rgba(183, 138, 63, 0.2)',
+  },
+  originRight: {
+    flex: '1 1 500px',
+    textAlign: 'left',
+  },
+  originPreTitle: {
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.3em',
+    color: '#B78A3F',
+    fontWeight: '700',
+    display: 'block',
+    marginBottom: '1rem',
+  },
+  originTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '2.5rem',
+    fontWeight: '300',
+    color: '#261813',
+    margin: '0 0 1rem 0',
+  },
+  originDivider: {
+    width: '60px',
+    height: '1px',
+    backgroundColor: '#B78A3F',
+    margin: '0 0 2rem 0',
+  },
+  originDesc: {
+    fontSize: '0.9rem',
+    lineHeight: '1.8',
+    color: '#A88978',
+    marginBottom: '1.5rem',
+  },
+  testimonialSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F3E8DF',
+    borderTop: '1px solid rgba(183, 138, 63, 0.15)',
+  },
+  testimonialGrid: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '2.5rem',
+  },
+  testimonialCard: {
+    backgroundColor: '#F6EFE5',
+    padding: '2.5rem',
+    borderRadius: '16px',
+    border: '1px solid rgba(183, 138, 63, 0.15)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  testimonialQuote: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.15rem',
+    lineHeight: '1.7',
+    color: '#261813',
+    fontStyle: 'italic',
+    margin: '0 0 1.5rem 0',
+  },
+  testimonialDivider: {
+    width: '30px',
+    height: '1px',
+    backgroundColor: '#B78A3F',
+    margin: '0 auto 1.25rem auto',
+  },
+  testimonialAuthor: {
+    fontSize: '0.78rem',
+    fontWeight: '700',
+    color: '#261813',
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+  },
+  testimonialFirm: {
+    fontSize: '0.72rem',
+    color: '#A88978',
+    marginTop: '4px',
+  },
+  newsletterSection: {
+    padding: '8rem 2rem',
+    backgroundColor: '#F6EFE5',
+    borderTop: '1px solid rgba(183, 138, 63, 0.12)',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  newsletterCard: {
+    backgroundColor: '#F3E8DF',
+    padding: '3rem',
+    borderRadius: '16px',
+    border: '1px solid rgba(183, 138, 63, 0.2)',
+    maxWidth: '620px',
+    width: '100%',
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  newsletterTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '1.8rem',
+    fontWeight: '300',
+    color: '#261813',
+    margin: '0 0 8px 0',
+  },
+  newsletterDesc: {
+    fontSize: '0.82rem',
+    color: '#A88978',
+    lineHeight: '1.6',
+    marginBottom: '2rem',
+    maxWidth: '450px',
+  },
+  newsletterForm: {
+    display: 'flex',
+    width: '100%',
+    gap: '10px',
+    flexWrap: 'wrap',
+  },
+  newsletterInput: {
+    flex: '1 1 300px',
+    padding: '14px 20px',
+    backgroundColor: '#F6EFE5',
+    border: '1px solid rgba(183, 138, 63, 0.3)',
+    borderRadius: '4px',
+    fontSize: '0.85rem',
+    fontFamily: 'var(--font-sans)',
+    outline: 'none',
+    color: '#261813',
+  },
+  newsletterBtn: {
+    backgroundColor: '#6B2027',
+    color: '#F6EFE5',
+    padding: '14px 28px',
+    borderRadius: '4px',
+    border: 'none',
+    fontSize: '0.75rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.15em',
+    fontWeight: '700',
+    cursor: 'pointer',
+    boxShadow: '0 4px 12px rgba(107, 32, 39, 0.15)',
+  },
+  newsletterSuccess: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '0.82rem',
+    color: '#261813',
+    fontWeight: '600',
   },
 };

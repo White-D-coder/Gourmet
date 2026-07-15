@@ -53,41 +53,41 @@ interface Order {
 const getProductImage = (slug: string) => {
   switch (slug) {
     case "the-botanical-heritage":
-      return "/botanical_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (2).jpeg";
     case "the-ivory-keepsake":
-      return "/ivory_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (3).jpeg";
     case "the-imperial-executive":
-      return "/executive_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (2).jpeg";
     case "premium-dark-chocolate-truffles":
-      return "/dark_chocolate_truffles.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (1).jpeg";
     case "single-origin-coffee-beans":
-      return "/single_origin_coffee.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (1).jpeg";
     case "silver-plated-tea-infuser":
-      return "/silver_tea_infuser.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (2).jpeg";
     case "hand-poured-soy-candle":
-      return "/hand_poured_candle.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (3).jpeg";
     case "artisanal-roasted-makhana":
-      return "/roasted_makhana.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
     case "premium-dryfruits-mix":
-      return "/dryfruits_mix.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (3).jpeg";
     case "blush-leather-diary":
-      return "/leather_diary.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35.jpeg";
     case "rose-quartz-crystal-tree":
-      return "/crystal_tree.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (1).jpeg";
     case "earl-grey-royal-tea-blend":
-      return "/earl_grey_tea.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31.jpeg";
     case "organic-honey-lavender-jars":
-      return "/honey_lavender.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33.jpeg";
     case "gold-foil-playing-cards":
-      return "/gold_playing_cards.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32.jpeg";
     case "sandalwood-incense-cones":
-      return "/incense_cones.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (2).jpeg";
     case "fine-bone-china-cup":
-      return "/china_cup.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (1).jpeg";
     case "belgian-waffle-crisps":
-      return "/waffle_crisps.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35 (1).jpeg";
     default:
-      return "/luxury_pearl_backdrop.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
   }
 };
 
@@ -448,7 +448,6 @@ export default function OrderTracking() {
 
                       <div style={styles.itemQtyCol}>
                         <span style={styles.qtyLabel}>{item.quantity} Unit(s)</span>
-                        <span style={styles.unitPrice}>${Number(item.priceSnapshot).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -506,26 +505,26 @@ export default function OrderTracking() {
               </div>
             </div>
 
-            {/* Receipt Summary details */}
+            {/* Order Authorization details */}
             <div style={styles.card}>
-              <h3 style={styles.cardTitle}>Receipt Breakdown</h3>
+              <h3 style={styles.cardTitle}>Verification Details</h3>
               <div style={styles.summaryBox}>
                 <div style={styles.summaryItem}>
-                  <span>Item Subtotal:</span>
-                  <span>${(order.totalAmount - order.taxAmount - order.deliveryFee).toFixed(2)}</span>
+                  <span>Billing Verification:</span>
+                  <span>Authorized & Authenticated</span>
                 </div>
                 <div style={styles.summaryItem}>
-                  <span>Estimated Tax (10%):</span>
-                  <span>${Number(order.taxAmount).toFixed(2)}</span>
+                  <span>Method:</span>
+                  <span>Simulated Safe Account</span>
                 </div>
                 <div style={styles.summaryItem}>
-                  <span>Delivery Fee:</span>
-                  <span>${Number(order.deliveryFee).toFixed(2)}</span>
+                  <span>Transit Class:</span>
+                  <span>Secure Hand-packaged</span>
                 </div>
                 <div style={styles.summaryDivider} />
                 <div style={styles.summaryGrand}>
-                  <span>Total Charged:</span>
-                  <span>${Number(order.totalAmount).toFixed(2)}</span>
+                  <span>Payment status:</span>
+                  <span style={{ color: '#bfa16f', fontWeight: 'bold' }}>{order.status === 'PAID' ? 'Fully Cleared' : order.status}</span>
                 </div>
               </div>
             </div>

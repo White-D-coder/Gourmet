@@ -81,13 +81,18 @@ export default function Header() {
     ? (scrolled ? 'rgba(203, 160, 82, 0.15)' : 'transparent') 
     : (scrolled ? 'rgba(191, 161, 111, 0.15)' : 'transparent');
 
-  const textColor = isDarkPage ? '#fbf9f4' : '#2e2520';
-  const mutedTextColor = isDarkPage ? '#a8a29e' : '#7a6e64';
+  const textColor = isDarkPage 
+    ? '#fbf9f4' 
+    : (scrolled ? '#2e2520' : '#ffffff');
+  const mutedTextColor = isDarkPage 
+    ? '#a8a29e' 
+    : (scrolled ? '#7a6e64' : '#ffffff');
   const showNavbarLogo = pathname !== '/' || scrolled;
 
   return (
     <>
       <nav
+        className="global-nav"
         style={{
           position: 'fixed',
           top: scrolled ? '1.25rem' : '0',
@@ -132,7 +137,7 @@ export default function Header() {
                 ...styles.logoText,
                 display: 'inline-block',
               }}
-              className="logo-sparkle-hover"
+              className="logo-text logo-sparkle-hover"
             >
               THE GOURMET <span style={{ color: '#bfa16f' }}>GIFTS</span> CO.
             </motion.span>
@@ -141,17 +146,17 @@ export default function Header() {
 
         {/* Center: Centered Links */}
         <div style={styles.centerLinksWrapper} className="hidden-mobile">
-          <Link href="/collections" className="nav-link" style={{ ...styles.navLink, color: mutedTextColor }}>
+          <Link href="/collections" className="nav-link" style={{ ...styles.navLink, color: scrolled ? '#7a6e64' : '#ffffff', fontSize: '0.8rem' }}>
             Collections
           </Link>
-          <Link href="/bespoke" className="nav-link" style={{ ...styles.navLink, color: mutedTextColor }}>
+          <Link href="/bespoke" className="nav-link" style={{ ...styles.navLink, color: scrolled ? '#7a6e64' : '#ffffff', fontSize: '0.8rem' }}>
             Bespoke
           </Link>
-          <Link href="/corporate" className="nav-link" style={{ ...styles.navLink, color: mutedTextColor }}>
+          <Link href="/corporate" className="nav-link" style={{ ...styles.navLink, color: scrolled ? '#7a6e64' : '#ffffff', fontSize: '0.8rem' }}>
             Corporate
           </Link>
           {user && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') && (
-            <Link href="/admin" className="nav-link" style={{ ...styles.navLink, color: '#bfa16f', fontWeight: '700' }}>
+            <Link href="/admin" className="nav-link" style={{ ...styles.navLink, color: '#bfa16f', fontWeight: '700', fontSize: '0.8rem' }}>
               Admin Panel
             </Link>
           )}
@@ -159,13 +164,13 @@ export default function Header() {
 
         {/* Right: Search, Auth & Cart Icons */}
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-          <div className="search-icon-wrapper" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+          <Link href="/collections" className="search-icon-wrapper" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'inherit' }}>
             <Search size={16} className="header-icon" />
-          </div>
+          </Link>
 
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-sans)', fontWeight: '600', letterSpacing: '0.05em', color: mutedTextColor }} className="hidden-mobile">
+              <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-sans)', fontWeight: '600', letterSpacing: '0.05em', color: scrolled ? '#7a6e64' : '#ffffff' }} className="hidden-mobile">
                 Hello, {user.firstName || 'Client'}
               </span>
               <a 
@@ -192,7 +197,7 @@ export default function Header() {
                 textTransform: 'uppercase', 
                 letterSpacing: '0.15em', 
                 fontWeight: '700', 
-                color: '#bfa16f', 
+                color: scrolled ? '#bfa16f' : '#ffffff', 
                 textDecoration: 'none' 
               }}
             >
@@ -342,6 +347,15 @@ export default function Header() {
         @media (max-width: 1024px) {
           .hidden-mobile {
             display: none !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .global-nav {
+            padding: 1rem 1.5rem !important;
+          }
+          .logo-text {
+            font-size: 0.82rem !important;
+            letter-spacing: 0.12em !important;
           }
         }
         @media (min-width: 1025px) {

@@ -74,8 +74,10 @@ export default function CorporateGifting() {
 
   // Helper to get budget label
   const getBudgetLabel = (val: number) => {
-    if (val >= 50000) return '$50,000+ (Enterprise Custom)';
-    return `$${val.toLocaleString()}`;
+    if (val >= 50000) return 'Royal Velvet Bespoke Tier';
+    if (val >= 30000) return 'Imperial Heritage Tier';
+    if (val >= 15000) return 'Executive Prestige Tier';
+    return 'Standard Curation Tier';
   };
 
   return (
@@ -108,14 +110,6 @@ export default function CorporateGifting() {
             transition={{ duration: 0.8, delay: 0.3 }}
             style={styles.divider}
           />
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            style={styles.description}
-          >
-            Establish profound connections. From client appreciation to annual rewards, our team is ready to curate and engrave bespoke collections aligned to your corporate values.
-          </motion.p>
         </div>
 
         {/* Multi-step Card Container */}
@@ -250,10 +244,10 @@ export default function CorporateGifting() {
                         style={styles.slider}
                       />
                       <div style={styles.sliderLabels}>
-                        <span>$1,000</span>
-                        <span>$15,000</span>
-                        <span>$30,000</span>
-                        <span>$50,000+</span>
+                        <span>Standard</span>
+                        <span>Prestige</span>
+                        <span>Heritage</span>
+                        <span>Royal Bespoke</span>
                       </div>
                     </div>
 

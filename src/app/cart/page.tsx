@@ -27,41 +27,41 @@ interface CartItem {
 const getProductImage = (slug: string) => {
   switch (slug) {
     case "the-botanical-heritage":
-      return "/botanical_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (2).jpeg";
     case "the-ivory-keepsake":
-      return "/ivory_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (3).jpeg";
     case "the-imperial-executive":
-      return "/executive_hamper.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (2).jpeg";
     case "premium-dark-chocolate-truffles":
-      return "/dark_chocolate_truffles.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (1).jpeg";
     case "single-origin-coffee-beans":
-      return "/single_origin_coffee.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (1).jpeg";
     case "silver-plated-tea-infuser":
-      return "/silver_tea_infuser.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (2).jpeg";
     case "hand-poured-soy-candle":
-      return "/hand_poured_candle.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (3).jpeg";
     case "artisanal-roasted-makhana":
-      return "/roasted_makhana.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
     case "premium-dryfruits-mix":
-      return "/dryfruits_mix.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (3).jpeg";
     case "blush-leather-diary":
-      return "/leather_diary.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35.jpeg";
     case "rose-quartz-crystal-tree":
-      return "/crystal_tree.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (1).jpeg";
     case "earl-grey-royal-tea-blend":
-      return "/earl_grey_tea.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31.jpeg";
     case "organic-honey-lavender-jars":
-      return "/honey_lavender.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33.jpeg";
     case "gold-foil-playing-cards":
-      return "/gold_playing_cards.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32.jpeg";
     case "sandalwood-incense-cones":
-      return "/incense_cones.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (2).jpeg";
     case "fine-bone-china-cup":
-      return "/china_cup.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (1).jpeg";
     case "belgian-waffle-crisps":
-      return "/waffle_crisps.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35 (1).jpeg";
     default:
-      return "/luxury_pearl_backdrop.png";
+      return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
   }
 };
 
@@ -344,21 +344,10 @@ export default function ShoppingCart() {
                 </div>
 
                 <div style={styles.invoiceSection}>
-                  <h4 style={styles.invoiceSectionTitle}>Calculated Breakdown</h4>
-                  <div style={styles.invoiceTotals}>
-                    <div style={styles.totalRowItem}>
-                      <span>Tax Amount (10%):</span>
-                      <span>${Number(completedOrder.taxAmount).toFixed(2)}</span>
-                    </div>
-                    <div style={styles.totalRowItem}>
-                      <span>Standard Delivery Fee:</span>
-                      <span>${Number(completedOrder.deliveryFee).toFixed(2)}</span>
-                    </div>
-                    <div style={styles.totalRowGrand}>
-                      <span>Total Charged (Simulated):</span>
-                      <span>${Number(completedOrder.totalAmount).toFixed(2)}</span>
-                    </div>
-                  </div>
+                  <h4 style={styles.invoiceSectionTitle}>Billing Verification</h4>
+                  <p style={styles.invoiceText}>
+                    Simulated transaction has been successfully authorized and completed securely.
+                  </p>
                 </div>
 
                 <div style={styles.invoiceSection}>
@@ -487,9 +476,7 @@ export default function ShoppingCart() {
                             {!item.customizationState?.selectedItemIds && renderItemCustomizations(item.customizationState)}
                           </div>
                           
-                          <div style={styles.itemPriceCol}>
-                            <span style={styles.itemUnitPrice}>${Number(item.priceSnapshot).toFixed(2)} / unit</span>
-                          </div>
+                          <div style={styles.itemPriceCol} />
                         </div>
 
                         <div style={styles.itemFooter}>
@@ -751,24 +738,20 @@ export default function ShoppingCart() {
                         </div>
                       </div>
 
-                      {/* Calculations Panel */}
+                      {/* Curation Dispatch Guidelines */}
                       <div style={styles.pricingSummary}>
                         <div style={styles.priceRowItem}>
-                          <span>Bag Subtotal:</span>
-                          <span>${subtotal.toFixed(2)}</span>
+                          <span>Packaging Protocol:</span>
+                          <span>Standard Luxury Curation</span>
                         </div>
                         <div style={styles.priceRowItem}>
-                          <span>Estimated Tax (10%):</span>
-                          <span>${tax.toFixed(2)}</span>
-                        </div>
-                        <div style={styles.priceRowItem}>
-                          <span>Standard Shipping:</span>
-                          <span>${delivery.toFixed(2)}</span>
+                          <span>Transit Class:</span>
+                          <span>Secure Hand-packaged Delivery</span>
                         </div>
                         <div style={styles.summaryDivider} />
                         <div style={styles.priceRowGrand}>
-                          <span>Order Total:</span>
-                          <span>${total.toFixed(2)}</span>
+                          <span>Authorization:</span>
+                          <span style={{ color: '#bfa16f', fontSize: '0.9rem', fontWeight: 'bold' }}>Ready for Dispatch</span>
                         </div>
                       </div>
 
@@ -777,7 +760,7 @@ export default function ShoppingCart() {
                         disabled={isCheckingOut}
                         style={styles.checkoutSubmitBtn}
                       >
-                        {isCheckingOut ? 'Authorizing Order...' : `Pay & Place Order • $${total.toFixed(2)}`}
+                        {isCheckingOut ? 'Authorizing Order...' : 'Confirm & Place Order'}
                       </button>
                     </form>
                     )}

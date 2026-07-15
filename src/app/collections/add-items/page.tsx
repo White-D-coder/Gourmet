@@ -230,35 +230,35 @@ function AddItemsWizardContent() {
   const getProductImage = (slug: string) => {
     switch (slug) {
       case "premium-dark-chocolate-truffles":
-        return "/dark_chocolate_truffles.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31 (1).jpeg";
       case "single-origin-coffee-beans":
-        return "/single_origin_coffee.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (1).jpeg";
       case "silver-plated-tea-infuser":
-        return "/silver_tea_infuser.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (2).jpeg";
       case "hand-poured-soy-candle":
-        return "/hand_poured_candle.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (3).jpeg";
       case "artisanal-roasted-makhana":
-        return "/roasted_makhana.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
       case "premium-dryfruits-mix":
-        return "/dryfruits_mix.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (3).jpeg";
       case "blush-leather-diary":
-        return "/leather_diary.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35.jpeg";
       case "rose-quartz-crystal-tree":
-        return "/crystal_tree.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32 (1).jpeg";
       case "earl-grey-royal-tea-blend":
-        return "/earl_grey_tea.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.31.jpeg";
       case "organic-honey-lavender-jars":
-        return "/honey_lavender.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33.jpeg";
       case "gold-foil-playing-cards":
-        return "/gold_playing_cards.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.32.jpeg";
       case "sandalwood-incense-cones":
-        return "/incense_cones.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34 (2).jpeg";
       case "fine-bone-china-cup":
-        return "/china_cup.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.33 (1).jpeg";
       case "belgian-waffle-crisps":
-        return "/waffle_crisps.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.35 (1).jpeg";
       default:
-        return "/luxury_pearl_backdrop.png";
+        return "/productspic/WhatsApp Image 2026-07-14 at 20.20.34.jpeg";
     }
   };
 
@@ -426,7 +426,6 @@ function AddItemsWizardContent() {
                                   </button>
                                   <div className="absolute inset-0 bg-clay-dark/95 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center p-1 text-center pointer-events-none z-10">
                                     <p className="text-[7px] text-ivory leading-none font-semibold truncate w-full">{selectedItem.name}</p>
-                                    <p className="text-[7px] text-gold font-bold mt-1">${Number(selectedItem.basePrice)}</p>
                                   </div>
                                 </>
                               ) : (
@@ -442,21 +441,23 @@ function AddItemsWizardContent() {
               </div>
             )}
 
-            {/* Price breakdown and checkout */}
+            {/* Curation breakdown and checkout */}
             <div className="border-t border-gold-light/30 pt-6 mt-2 space-y-4">
               <div className="space-y-2 text-xs font-sans">
                 <div className="flex justify-between text-clay-light font-medium">
-                  <span>Box base fee ({totalBoxes}x):</span>
-                  <span>${calculatedBoxTotal.toFixed(2)}</span>
+                  <span>Keepsake Boxes Packed:</span>
+                  <span>{totalBoxes} Box(es)</span>
                 </div>
                 <div className="flex justify-between text-clay-light font-medium">
-                  <span>Selected items ({selectedItems.length}x):</span>
-                  <span>${calculatedItemsTotal.toFixed(2)}</span>
+                  <span>Selected Curation Items:</span>
+                  <span>{selectedItems.length} Item(s)</span>
                 </div>
                 <div className="h-[1px] bg-gold-light/20 my-2" />
                 <div className="flex justify-between text-base text-clay-dark font-serif font-bold">
-                  <span>Calculated Total:</span>
-                  <span className="text-gold">${calculatedTotalPrice.toFixed(2)}</span>
+                  <span>Curation Status:</span>
+                  <span className="text-gold uppercase tracking-wider font-sans text-xs font-bold">
+                    {selectedItems.length > 0 && selectedItems.length <= totalCapacity ? "Approved for packing" : "Awaiting items"}
+                  </span>
                 </div>
               </div>
 
@@ -529,9 +530,6 @@ function AddItemsWizardContent() {
                       <div className="flex justify-between items-start mb-2">
                         <span className="font-sans text-[8px] uppercase tracking-widest text-gold font-bold">
                           {item.category?.name}
-                        </span>
-                        <span className="font-serif text-sm font-semibold text-gold">
-                          ${Number(item.basePrice)}
                         </span>
                       </div>
 
