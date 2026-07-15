@@ -253,7 +253,7 @@ export default function Header() {
                 top: '2.5rem',
                 right: '3rem',
                 cursor: 'pointer',
-                color: textColor,
+                color: isDarkPage ? '#F6EFE5' : '#3A141A',
               }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
@@ -280,7 +280,7 @@ export default function Header() {
                 >
                   <Link 
                     href={item.href} 
-                    style={{ ...styles.mobileLink, color: textColor }} 
+                    style={{ ...styles.mobileLink, color: isDarkPage ? '#F6EFE5' : '#3A141A' }} 
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="mobile-nav-link"
                   >

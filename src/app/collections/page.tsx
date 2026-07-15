@@ -99,7 +99,25 @@ const getProductImage = (product: any) => {
   }
 
   if (segment === "royale-tins") {
-    const images = ["/royale.jpeg", "/royale2.jpeg", "/royale3.jpeg", "/royale4.jpeg", "/royaletin.jpeg"];
+    const images = [
+      "/productspic/tin1.jpeg",
+      "/productspic/tin2.jpeg",
+      "/productspic/tin3.jpeg",
+      "/productspic/tin4.jpeg",
+      "/productspic/tin5.jpeg",
+      "/productspic/tin6.jpeg",
+      "/productspic/tin7.jpeg",
+      "/productspic/tin8.jpeg",
+      "/productspic/tin9.jpeg",
+      "/productspic/tin10.jpeg",
+      "/productspic/tin11.jpeg",
+      "/productspic/tin12.jpeg",
+      "/productspic/tin13.jpeg",
+      "/productspic/tin14.jpeg",
+      "/productspic/tin15.jpeg",
+      "/productspic/tin16.jpeg",
+      "/productspic/tin17.jpeg"
+    ];
     return images[hash % images.length];
   }
 
