@@ -76,7 +76,7 @@ export default function Home() {
       id: 'hamper-imperial',
       slug: 'the-imperial-executive',
       title: 'The Imperial Executive',
-      category: 'Royale Tins Collection',
+      category: 'Royale Tin Tin Collection',
       price: 'Executive Curation',
       desc: 'Sleek walnut chest crafted for boards of directors and VIP clients. Features single-origin coffee and brass executive accessories.',
       image: '/executive_hamper.png',
@@ -224,16 +224,16 @@ export default function Home() {
                 </Link>
               </motion.div>
 
-              {/* Card 2: Royale Tin */}
+              {/* Card 2: Royale Tin Tin */}
               <motion.div 
                 whileHover={{ y: -6 }}
                 className="bg-[#FBF9F4] border border-[#2E4A3E]/30 p-5 flex flex-col justify-between shadow-premium rounded-lg"
               >
                 <div>
                   <div className="relative aspect-[4/3] w-full overflow-hidden border border-[#2E4A3E]/20 mb-4 bg-white rounded">
-                    <Image src="/executive_hamper.png" alt="Royale Tin Packaging" fill style={{ objectFit: 'cover' }} />
+                    <Image src="/executive_hamper.png" alt="Royale Tin Tin Packaging" fill style={{ objectFit: 'cover' }} />
                   </div>
-                  <h4 className="font-serif text-lg text-[#261813] font-bold mb-1">Royale Tin</h4>
+                  <h4 className="font-serif text-lg text-[#261813] font-bold mb-1">Royale Tin Tin</h4>
                   <p className="text-[9px] tracking-wider text-[#A88978] uppercase mb-3 font-semibold">collectible, heirloom metal packaging</p>
                 </div>
                 <Link href="/collections?segment=royale-tins" className="w-full text-center py-2 bg-[#2D453A] text-[#F6EFE5] text-[9px] uppercase tracking-widest font-bold hover:bg-[#1E3028] transition-colors rounded">
@@ -359,7 +359,7 @@ export default function Home() {
             <h2 style={styles.tinTitle}>The Art of the Tin</h2>
             <div style={styles.tinDivider} />
             <p style={styles.tinParagraph}>
-              Our signature Royale canisters are built to outlive the initial occasion. Engineered with architectural precision, double-walled premium tins preserve natural aromas while displaying intricate floral engravings and antique brass trim.
+              Our signature Royale Tin Tin canisters are built to outlive the initial occasion. Engineered with architectural precision, double-walled premium tins preserve natural aromas while displaying intricate floral engravings and antique brass trim.
             </p>
             <p style={styles.tinParagraph}>
               Designed to be repurposed as luxury canisters for Assam tea leaves, heirloom jewelry vaults, or structural desk organisers, each tin behaves like a tactile piece of interior art in your recipient's home.
@@ -372,7 +372,7 @@ export default function Home() {
           </div>
           <div style={styles.tinRight}>
             <div style={styles.tinImageFrame} className="frame-odd-3 shadow-premium">
-              <Image src="/executive_hamper.png" alt="Royale Tin details close up" fill style={{ objectFit: 'cover' }} />
+              <Image src="/executive_hamper.png" alt="Royale Tin Tin details close up" fill style={{ objectFit: 'cover' }} />
             </div>
           </div>
         </div>
@@ -517,7 +517,7 @@ export default function Home() {
 
         <div style={styles.testimonialGrid}>
           {[
-            { quote: "The Royale Tins are phenomenal. Our clients were stunned by the copper lid engraving and the quality of Coorg coffee beans. A serious luxury statement.", author: "Aurelia Vane, Creative Director", firm: "Vane & Co. London" },
+            { quote: "The Royale Tin Tins are phenomenal. Our clients were stunned by the copper lid engraving and the quality of Coorg coffee beans. A serious luxury statement.", author: "Aurelia Vane, Creative Director", firm: "Vane & Co. London" },
             { quote: "Every single wedding favor box felt like a personal heirloom. The parchment note and velvet liners made it deeply emotional for our family guests.", author: "Advik Sharma, Private Collector", firm: "Wedding Curation" },
             { quote: "On-time delivery and impeccable mockups. Gourmet Gifts Co. has redefined our annual B2B gratitude campaigns. Highly recommended for absolute trust.", author: "Kabir Mehta, Managing Partner", firm: "Mehta Legal" }
           ].map((t, idx) => (

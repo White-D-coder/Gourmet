@@ -388,7 +388,7 @@ function CollectionsContent() {
                 : "border-gold/30 text-clay-light bg-ivory/30 hover:border-gold/80 hover:bg-ivory/70"
             }`}
           >
-            {tab === "all" ? "All Masterpieces" : tab === "classics" ? "The Classics" : tab === "royale-tins" ? "Royale Tins" : "Premium Velvet"}
+            {tab === "all" ? "All Masterpieces" : tab === "classics" ? "The Classics" : tab === "royale-tins" ? "Royale Tin Tin" : "Premium Velvet"}
           </button>
         ))}
       </div>
